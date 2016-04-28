@@ -17,7 +17,7 @@
 /**
  * Carousel block caps.
  *
- * @package   block_html
+ * @package   block_carousel
  * @copyright 2016 Brendan Heywood (brendan@catalyst-au.net)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

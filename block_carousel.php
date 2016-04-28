@@ -17,17 +17,23 @@
 /**
  * Carousel block
  *
- * @package   block_html
+ * @package   block_carousel
  * @copyright 2016 Brendan Heywood (brendan@catalyst-au.net)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+/**
+ * Carousel block
+ *
+ * @copyright 2016 Brendan Heywood (brendan@catalyst-au.net)
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class block_carousel extends block_base {
 
     /**
      * Init
      */
-    function init() {
+    public function init() {
         $this->title = get_string('pluginname', 'block_carousel');
     }
 
@@ -43,7 +49,7 @@ class block_carousel extends block_base {
     /**
      * Can appear on any page
      */
-    function applicable_formats() {
+    public function applicable_formats() {
         return array('all' => true);
     }
 
@@ -52,11 +58,14 @@ class block_carousel extends block_base {
      *
      * @return bool
      */
-    function instance_allow_multiple() {
+    public function instance_allow_multiple() {
         return true;
     }
 
-    function get_content() {
+    /**
+     * The html for the carousel
+     */
+    public function get_content() {
         global $CFG;
 
         require_once($CFG->libdir . '/filelib.php');
