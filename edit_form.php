@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Carousel block
+ * Form for editing a carousel block instance.
  *
  * @package   block_carousel
  * @copyright 2016 Brendan Heywood (brendan@catalyst-au.net)
@@ -23,58 +23,30 @@
  */
 
 /**
- * Carousel block
+ * Form for editing carousel block instances.
  *
  * @copyright 2016 Brendan Heywood (brendan@catalyst-au.net)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class block_carousel extends block_base {
+class block_carousel_edit_form extends block_edit_form {
 
-    /**
-     * Init
-     */
-    public function init() {
-        $this->title = get_string('pluginname', 'block_carousel');
-    }
-
-    /**
-     * Can appear on any page
-     */
-    public function applicable_formats() {
-        return array('all' => true);
-    }
-
-    /**
-     * We could have multiple carousels
-     *
-     * @return bool
-     */
-    public function instance_allow_multiple() {
-        return true;
-    }
-
-    /**
-     * The html for the carousel
-     */
-    public function get_content() {
+    protected function specific_definition($mform) {
         global $CFG;
 
-        require_once($CFG->libdir . '/filelib.php');
+        $mform->addElement('header', 'configheader', get_string('blocksettings', 'block_carousel'));
 
-        $this->content = new stdClass;
-        $this->content->text = 'helo world';
+        $slidegroup = array();
+        $slidegroup[] = $mform->createElement('text', 'config_title', get_string('slidetitle', 'block_carousel'));
+        $slidegroup[] = $mform->createElement('text', 'config_text', get_string('slidetext', 'block_carousel'));
+        $slidegroup[] = $mform->createElement('text', 'config_url', get_string('slideurl', 'block_carousel'));
 
-        return $this->content;
-    }
+        $options = array();
+        $options['config_title']['type'] = PARAM_TEXT;
+        $options['config_text']['type'] = PARAM_TEXT;
+        $options['config_url']['type'] = PARAM_URL;
 
-    /**
-     * Can never be docked
-     *
-     * @return bool
-     */
-    public function instance_can_be_docked() {
-        return false;
+        $this->repeat_elements($slidegroup, 3, $options, 'slides', 'add_slides', 1, null, true);
+
     }
 
 }
-
