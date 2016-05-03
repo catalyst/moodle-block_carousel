@@ -61,8 +61,42 @@ class block_carousel extends block_base {
 
         require_once($CFG->libdir . '/filelib.php');
 
+
+        $blockid = $this->context->id;
+        $html = html_writer::start_tag('div', array('id' => 'carousel' . $blockid));
+
+        $html .= "blockid $blockid";
+
+        if ($this->content !== null) {
+            return $this->content;
+        }
+
+        $config = $this->config;
         $this->content = new stdClass;
-        $this->content->text = 'helo world';
+
+        if (empty($config)) {
+            $this->content->text = '';
+            return $this->content;
+        }
+
+        for($c=0; $c < sizeof($config->title); $c++) {
+            $title = $config->title[$c];
+            $text = $config->text[$c];
+            $url = $config->url[$c];
+            $html .= "<div>
+==
+$title
+$text
+$url
+</div>";
+        }
+
+        $this->page->requires->css('/blocks/carousel/extlib/slick-1.5.9/slick/slick.css');
+        $this->page->requires->css('/blocks/carousel/extlib/slick-1.5.9/slick/slick-theme.css');
+        $this->page->requires->js_call_amd('block_carousel/carousel', 'init', array($blockid));
+
+        $html .= '</div>';
+        $this->content->text = $html;
 
         return $this->content;
     }
