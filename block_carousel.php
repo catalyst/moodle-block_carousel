@@ -48,7 +48,7 @@ class block_carousel extends block_base {
      * Hide the header
      * @return boolean
      */
-    function hide_header() {
+    public function hide_header() {
         return true;
     }
     /**
@@ -56,8 +56,8 @@ class block_carousel extends block_base {
      *
      * @return array attribute name => value.
      */
-    function html_attributes() {
-        if($this->page->user_is_editing()) {
+    public function html_attributes() {
+        if ($this->page->user_is_editing()) {
             return parent::html_attributes();
         }
         $attributes = array(
@@ -104,7 +104,7 @@ class block_carousel extends block_base {
 
         $height = $config->height;
 
-        for($c=0; $c < sizeof($config->title); $c++) {
+        for ($c = 0; $c < count($config->title); $c++) {
             $title = $config->title[$c];
             $text = $config->text[$c];
             $url = $config->url[$c];
@@ -169,17 +169,17 @@ class block_carousel extends block_base {
     /**
      * Serialize and store config data
      */
-    function instance_config_save($data, $nolongerused = false) {
+    public function instance_config_save($data, $nolongerused = false) {
         global $DB;
 
         $config = clone($data);
-        for($c=0; $c < sizeof($data->image); $c++) {
+        for ($c = 0; $c < count($data->image); $c++) {
             file_save_draft_area_files($data->image[$c], $this->context->id, 'block_carousel', 'slide', $c);
         }
         parent::instance_config_save($config, $nolongerused);
     }
 
-    function instance_delete() {
+    public function instance_delete() {
         global $DB;
         $fs = get_file_storage();
         $fs->delete_area_files($this->context->id, 'block_carousel');
