@@ -1,12 +1,23 @@
+[![Build Status](https://travis-ci.org/CatalystIT-AU/moodle-block_carousel.svg?branch=master)](https://travis-ci.org/CatalystIT-AU/moodle-block_carousel)
+
 # Carousel block
 
+An easy to use carousel block:
+
+* responsive
+* touch and mouse friendly
 
 # Installation
 
+Install the same as any other moodle plugin:
+
+
+
+# Configuration
 
 # Credits and thanks
 
-The core of this plugin is the excellent 'slick' library:
+The core of this plugin is the excellent 'slick' JS library:
 
 http://kenwheeler.github.io/slick/
 
