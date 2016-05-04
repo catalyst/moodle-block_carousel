@@ -23,6 +23,7 @@
 define(['jquery', 'block_carousel/slick'], function($) {
     return {
         init: function(blockid) {
+            $('#carousel' + blockid + ' .slidewrap').show();
             $('#carousel' + blockid).slick({
                 dots: true,
                 infinite: true,

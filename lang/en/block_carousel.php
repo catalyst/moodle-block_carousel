@@ -25,7 +25,8 @@
 $string['html:addinstance'] = 'Add a new carousel block';
 $string['html:myaddinstance'] = 'Add a new carousel block to Dashboard';
 $string['blocksettings'] = 'Carousel settings';
-$string['slideheader'] = 'Slide';
+$string['configheight'] = 'Height (eg 100px or 50%)';
+$string['slideheader'] = 'Slides';
 $string['slideimage'] = 'Image';
 $string['slidetitle'] = 'Title';
 $string['slidetext'] = 'Text';

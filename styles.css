@@ -1,4 +1,26 @@
-.block_carousel .image img {
-    width: 100% !important;
+.block_carousel {
+    margin-bottom: 60px;
+}
+.block_carousel .slidewrap {
+    position: relative;
+    height: 0px;
+    color: white;
+    background-size: cover;
+    background-position: 50% 50%;
+}
+
+.block_carousel .slidewrap .title {
+    padding: 1em;
+    margin: 0;
+    text-shadow: 0px 2px 6px #000;
+}
+
+.block_carousel .slidewrap .text {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1em;
+    background: rgba(0,0,0,.4);
 }
 

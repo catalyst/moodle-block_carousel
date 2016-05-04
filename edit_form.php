@@ -35,17 +35,20 @@ class block_carousel_edit_form extends block_edit_form {
 
         $mform->addElement('header', 'configheader', get_string('blocksettings', 'block_carousel'));
 
+        $mform->addElement('text', 'config_height', get_string('configheight', 'block_carousel'));
+        $mform->setType('config_height', PARAM_TEXT);
+        $mform->setDefault('config_height', '50%');
+
+        $mform->addElement('header', 'configheaderslides', get_string('slideheader', 'block_carousel'));
+        $mform->setExpanded('configheaderslides');
+
         $options = array();
         $slidegroup = array();
-
-        // $slidegroup[] = $mform->createElement('header', 'slide_header', get_string('slideheader', 'block_carousel'));
-        // $options['config_header']['expanded'] = 'slide_header';
-        // $mform->setExpanded('foo')
 
         $slidegroup[] = $mform->createElement('text', 'config_title', get_string('slidetitle', 'block_carousel'));
         $options['config_title']['type'] = PARAM_TEXT;
 
-        $slidegroup[] = $mform->createElement('text', 'config_text', get_string('slidetext', 'block_carousel'));
+        $slidegroup[] = $mform->createElement('textarea', 'config_text', get_string('slidetext', 'block_carousel'));
         $options['config_text']['type'] = PARAM_TEXT;
 
         $slidegroup[] = $mform->createElement('text', 'config_url', get_string('slideurl', 'block_carousel'));

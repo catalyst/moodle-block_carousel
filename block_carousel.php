@@ -45,6 +45,30 @@ class block_carousel extends block_base {
     }
 
     /**
+     * Hide the header
+     * @return boolean
+     */
+    function hide_header() {
+        return true;
+    }
+    /**
+     * Unless we are in editing mode, remove all visual block chrome
+     *
+     * @return array attribute name => value.
+     */
+    function html_attributes() {
+        if($this->page->user_is_editing()) {
+            return parent::html_attributes();
+        }
+        $attributes = array(
+            'id' => 'inst' . $this->instance->id,
+            'class' => 'block_' . $this->name(),
+            'role' => $this->get_aria_role()
+        );
+        return $attributes;
+    }
+
+    /**
      * We could have multiple carousels
      *
      * @return bool
@@ -78,30 +102,47 @@ class block_carousel extends block_base {
 
         $fs = get_file_storage();
 
+        $height = $config->height;
+
         for($c=0; $c < sizeof($config->title); $c++) {
             $title = $config->title[$c];
             $text = $config->text[$c];
             $url = $config->url[$c];
-            $html .= html_writer::start_tag('div');
-            if ($title) {
-                $html .= html_writer::tag('h4', $title);
-            }
-            if ($text) {
-                $html .= html_writer::tag('div', $text);
-            }
+            $html .= html_writer::start_tag('div'); // This will be modified by slick.
             $files   = $fs->get_area_files($this->context->id, 'block_carousel', 'slide', $c);
+
+            $image = '';
             foreach ($files as $file) {
 
                 if ($file->get_filesize() == 0) {
-                    continue; // TODO why are there shitty records?
+                    continue; // TODO fix the broken dud records.
                 }
 
-                $url = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(),
+                $image = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(),
                         $file->get_filearea(), $file->get_itemid(), $file->get_filepath(), $file->get_filename());
-                $html .= '<div class="image">';
-                // $html .= html_writer::tag('img', '', array('data-lazy' => $url->out()));
-                $html .= html_writer::tag('img', '', array('src' => $url->out()));
-                $html .= '</div>';
+            }
+
+            // Wrapping the slide in an object is a neat trick allowing the slide to be a link
+            // and for the text within it to also have sub-links.
+            if ($url) {
+                $html .= html_writer::start_tag('a', array('href' => $url, 'class' => 'slidelink'));
+                $html .= html_writer::start_tag('object');
+            }
+            $show = ($c == 0) ? 'block' : 'none';
+            $html .= html_writer::start_tag('div', array(
+                'class' => 'slidewrap',
+                'style' => "padding-bottom: $height; background-image: url($image); display: $show;"
+            ));
+            if ($title) {
+                $html .= html_writer::tag('h4', $title, array('class' => 'title'));
+            }
+            if ($text) {
+                $html .= html_writer::tag('div', $text, array('class' => 'text'));
+            }
+            $html .= html_writer::end_tag('div');
+            if ($url) {
+                $html .= html_writer::end_tag('object');
+                $html .= html_writer::end_tag('a');
             }
             $html .= html_writer::end_tag('div');
         }
