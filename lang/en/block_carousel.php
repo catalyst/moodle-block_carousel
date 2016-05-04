@@ -25,10 +25,11 @@
 $string['html:addinstance'] = 'Add a new carousel block';
 $string['html:myaddinstance'] = 'Add a new carousel block to Dashboard';
 $string['blocksettings'] = 'Carousel settings';
-$string['slidetitle'] = 'Slide title';
+$string['slideheader'] = 'Slide';
+$string['slideimage'] = 'Image';
+$string['slidetitle'] = 'Title';
 $string['slidetext'] = 'Text';
 $string['slideurl'] = 'URL';
-// $string['slideimage'] = 'Slide image';
 $string['pluginname'] = 'Carousel';
 
 

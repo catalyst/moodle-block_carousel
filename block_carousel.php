@@ -61,11 +61,8 @@ class block_carousel extends block_base {
 
         require_once($CFG->libdir . '/filelib.php');
 
-
         $blockid = $this->context->id;
         $html = html_writer::start_tag('div', array('id' => 'carousel' . $blockid));
-
-        $html .= "blockid $blockid";
 
         if ($this->content !== null) {
             return $this->content;
@@ -79,23 +76,41 @@ class block_carousel extends block_base {
             return $this->content;
         }
 
+        $fs = get_file_storage();
+
         for($c=0; $c < sizeof($config->title); $c++) {
             $title = $config->title[$c];
             $text = $config->text[$c];
             $url = $config->url[$c];
-            $html .= "<div>
-==
-$title
-$text
-$url
-</div>";
+            $html .= html_writer::start_tag('div');
+            if ($title) {
+                $html .= html_writer::tag('h4', $title);
+            }
+            if ($text) {
+                $html .= html_writer::tag('div', $text);
+            }
+            $files   = $fs->get_area_files($this->context->id, 'block_carousel', 'slide', $c);
+            foreach ($files as $file) {
+
+                if ($file->get_filesize() == 0) {
+                    continue; // TODO why are there shitty records?
+                }
+
+                $url = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(),
+                        $file->get_filearea(), $file->get_itemid(), $file->get_filepath(), $file->get_filename());
+                $html .= '<div class="image">';
+                // $html .= html_writer::tag('img', '', array('data-lazy' => $url->out()));
+                $html .= html_writer::tag('img', '', array('src' => $url->out()));
+                $html .= '</div>';
+            }
+            $html .= html_writer::end_tag('div');
         }
 
         $this->page->requires->css('/blocks/carousel/extlib/slick-1.5.9/slick/slick.css');
         $this->page->requires->css('/blocks/carousel/extlib/slick-1.5.9/slick/slick-theme.css');
         $this->page->requires->js_call_amd('block_carousel/carousel', 'init', array($blockid));
 
-        $html .= '</div>';
+        $html .= html_writer::end_tag('div');
         $this->content->text = $html;
 
         return $this->content;
@@ -110,5 +125,24 @@ $url
         return false;
     }
 
+    /**
+     * Serialize and store config data
+     */
+    function instance_config_save($data, $nolongerused = false) {
+        global $DB;
+
+        $config = clone($data);
+        for($c=0; $c < sizeof($data->image); $c++) {
+            file_save_draft_area_files($data->image[$c], $this->context->id, 'block_carousel', 'slide', $c);
+        }
+        parent::instance_config_save($config, $nolongerused);
+    }
+
+    function instance_delete() {
+        global $DB;
+        $fs = get_file_storage();
+        $fs->delete_area_files($this->context->id, 'block_carousel');
+        return true;
+    }
 }
 

@@ -28,7 +28,9 @@ define(['jquery', 'block_carousel/slick'], function($) {
                 infinite: true,
                 speed: 300,
                 slidesToShow: 1,
-                adaptiveHeight: true
+                adaptiveHeight: true,
+                autoplay: true,
+                autoplaySpeed: 4000, // TODO config item
             });
         }
     };

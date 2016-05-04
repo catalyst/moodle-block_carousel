@@ -35,15 +35,25 @@ class block_carousel_edit_form extends block_edit_form {
 
         $mform->addElement('header', 'configheader', get_string('blocksettings', 'block_carousel'));
 
-        $slidegroup = array();
-        $slidegroup[] = $mform->createElement('text', 'config_title', get_string('slidetitle', 'block_carousel'));
-        $slidegroup[] = $mform->createElement('text', 'config_text', get_string('slidetext', 'block_carousel'));
-        $slidegroup[] = $mform->createElement('text', 'config_url', get_string('slideurl', 'block_carousel'));
-
         $options = array();
+        $slidegroup = array();
+
+        // $slidegroup[] = $mform->createElement('header', 'slide_header', get_string('slideheader', 'block_carousel'));
+        // $options['config_header']['expanded'] = 'slide_header';
+        // $mform->setExpanded('foo')
+
+        $slidegroup[] = $mform->createElement('text', 'config_title', get_string('slidetitle', 'block_carousel'));
         $options['config_title']['type'] = PARAM_TEXT;
+
+        $slidegroup[] = $mform->createElement('text', 'config_text', get_string('slidetext', 'block_carousel'));
         $options['config_text']['type'] = PARAM_TEXT;
+
+        $slidegroup[] = $mform->createElement('text', 'config_url', get_string('slideurl', 'block_carousel'));
         $options['config_url']['type'] = PARAM_URL;
+
+        $slidegroup[] = $mform->createElement('filepicker', 'config_image', get_string('slideimage', 'block_carousel'),
+                null, array('accepted_types' => 'image'));
+        $options['config_image']['type'] = PARAM_FILE;
 
         $this->repeat_elements($slidegroup, 3, $options, 'slides', 'add_slides', 1, null, true);
 
