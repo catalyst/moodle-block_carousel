@@ -22,7 +22,7 @@
  */
 define(['jquery', 'block_carousel/slick'], function($) {
     return {
-        init: function(blockid) {
+        init: function(blockid, playspeed) {
             $('#carousel' + blockid + ' .slidewrap').show();
             $('#carousel' + blockid).slick({
                 dots: true,
@@ -31,9 +31,8 @@ define(['jquery', 'block_carousel/slick'], function($) {
                 slidesToShow: 1,
                 adaptiveHeight: true,
                 autoplay: true,
-                autoplaySpeed: 4000, // TODO config item
+                autoplaySpeed: playspeed
             });
         }
     };
 });
-

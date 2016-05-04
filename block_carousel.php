@@ -149,7 +149,7 @@ class block_carousel extends block_base {
 
         $this->page->requires->css('/blocks/carousel/extlib/slick-1.5.9/slick/slick.css');
         $this->page->requires->css('/blocks/carousel/extlib/slick-1.5.9/slick/slick-theme.css');
-        $this->page->requires->js_call_amd('block_carousel/carousel', 'init', array($blockid));
+        $this->page->requires->js_call_amd('block_carousel/carousel', 'init', array($blockid, $config->playspeed * 1000));
 
         $html .= html_writer::end_tag('div');
         $this->content->text = $html;

@@ -39,6 +39,10 @@ class block_carousel_edit_form extends block_edit_form {
         $mform->setType('config_height', PARAM_TEXT);
         $mform->setDefault('config_height', '50%');
 
+        $mform->addElement('text', 'config_playspeed', get_string('configplayspeed', 'block_carousel'));
+        $mform->setType('config_playspeed', PARAM_FLOAT);
+        $mform->setDefault('config_playspeed', '4');
+
         $mform->addElement('header', 'configheaderslides', get_string('slideheader', 'block_carousel'));
         $mform->setExpanded('configheaderslides');
 
