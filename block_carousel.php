@@ -168,6 +168,8 @@ class block_carousel extends block_base {
 
     /**
      * Serialize and store config data
+     * @param object $data Form data
+     * @param boolean $nolongerused boolean Not used
      */
     public function instance_config_save($data, $nolongerused = false) {
         $config = clone($data);
@@ -177,6 +179,9 @@ class block_carousel extends block_base {
         parent::instance_config_save($config, $nolongerused);
     }
 
+    /**
+     * Delete an instance
+     */
     public function instance_delete() {
         $fs = get_file_storage();
         $fs->delete_area_files($this->context->id, 'block_carousel');

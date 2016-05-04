@@ -30,6 +30,10 @@
  */
 class block_carousel_edit_form extends block_edit_form {
 
+    /**
+     * Form def
+     * @param object $mform the form being built.
+     */
     protected function specific_definition($mform) {
 
         $mform->addElement('header', 'configheader', get_string('blocksettings', 'block_carousel'));
