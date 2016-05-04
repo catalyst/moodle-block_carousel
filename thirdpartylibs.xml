@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<libraries>
+  <library>
+    <location>extlib/slick-1.5.9/*</location>
+    <location>amd/src/slick.js</location>
+    <location>amd/build/slick.min.js</location>
+    <name>Slick</name>
+    <version>1.5.9</version>
+    <license>MIT</license>
+    <licenseversion>1</licenseversion>
+  </library>
+</libraries>
+
