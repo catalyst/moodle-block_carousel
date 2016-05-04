@@ -170,8 +170,6 @@ class block_carousel extends block_base {
      * Serialize and store config data
      */
     public function instance_config_save($data, $nolongerused = false) {
-        global $DB;
-
         $config = clone($data);
         for ($c = 0; $c < count($data->image); $c++) {
             file_save_draft_area_files($data->image[$c], $this->context->id, 'block_carousel', 'slide', $c);
@@ -180,7 +178,6 @@ class block_carousel extends block_base {
     }
 
     public function instance_delete() {
-        global $DB;
         $fs = get_file_storage();
         $fs->delete_area_files($this->context->id, 'block_carousel');
         return true;
