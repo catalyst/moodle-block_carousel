@@ -2,6 +2,8 @@
 
 https://moodle.org/plugins/block_carousel
 
+![Screen shot](/pix/screenshot.png?raw=true)
+
 * [What is this?](#what-is-this)
 * [Installation and configuration](#installation-and-configuration)
 * [Issues and feedback](#issues-and-feedback)
@@ -9,8 +11,6 @@ https://moodle.org/plugins/block_carousel
 
 What is this?
 -------------
-
-![Screen shot](/pix/screenshot.png?raw=true)
 
 An easy to use carousel block:
 
