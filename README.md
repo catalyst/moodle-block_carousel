@@ -10,6 +10,8 @@ https://moodle.org/plugins/block_carousel
 What is this?
 -------------
 
+![Screen shot](/pix/screenshot.png?raw=true)
+
 An easy to use carousel block:
 
 * responsive
