@@ -5,13 +5,10 @@ https://moodle.org/plugins/block_carousel
 * [What is this?](#what-is-this)
 * [Installation and configuration](#installation-and-configuration)
 * [Issues and feedback](#issues-and-feedback)
-* [Thanks and credits](#thanks-and-credits)
+* [Credits and Thanks](#credits-and-thanks)
 
 What is this?
 -------------
-
-Carousel block
---------------
 
 An easy to use carousel block:
 
