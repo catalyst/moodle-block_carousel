@@ -68,7 +68,7 @@ This plugin was sponsored by Central Queesnland University:
 
 https://www.cqu.edu.au/
 
-![CQU](/pix/cgu.png?raw=true)
+![CQU](/pix/cqu.png?raw=true)
 
 This plugin was developed by Catalyst IT Australia:
 
