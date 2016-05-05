@@ -19,18 +19,19 @@ An easy to use carousel block:
 Installation and Configuration
 ------------------------------
 
-Install the same as any other moodle plugin:
+1. Install the same as any other moodle plugin:
 
-Using git
+    Using git
 
- git clone git@github.com:CatalystIT-AU/moodle-block_carousel.git blocks/carousel
+     git clone git@github.com:CatalystIT-AU/moodle-block_carousel.git blocks/carousel
 
-Or install via the Moodle plugin directory:
+    Or install via the Moodle plugin directory:
 
-https://moodle.org/plugins/block_carousel
+     https://moodle.org/plugins/block_carousel
 
-2) Then run the Moodle upgrade
-3) Now add the block to a page, then configure it add the slides
+2. Then run the Moodle upgrade
+
+3. Now add the block to a page, then configure it add the slides
 
 
 Contributing
