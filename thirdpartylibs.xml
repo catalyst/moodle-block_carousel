@@ -3,7 +3,7 @@
   <library>
     <location>extlib/slick-1.5.9/*</location>
     <location>amd/src/slick.js</location>
-    <location>amd/build/slick.min.js</location>
+    <location>amd/build/*</location>
     <name>Slick</name>
     <version>1.5.9</version>
     <license>MIT</license>
