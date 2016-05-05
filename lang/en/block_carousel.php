@@ -24,6 +24,7 @@
 
 $string['html:addinstance'] = 'Add a new carousel block';
 $string['html:myaddinstance'] = 'Add a new carousel block to Dashboard';
+$string['addslide'] = 'Add another slide';
 $string['blocksettings'] = 'Carousel settings';
 $string['configheight'] = 'Height (eg 100px or 50%)';
 $string['configplayspeed'] = 'Play speed (in seconds)';
