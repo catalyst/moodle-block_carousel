@@ -22,8 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['html:addinstance'] = 'Add a new carousel block';
-$string['html:myaddinstance'] = 'Add a new carousel block to Dashboard';
+$string['carousel:addinstance'] = 'Add a new carousel block';
+$string['carousel:myaddinstance'] = 'Add a new carousel block to Dashboard';
 $string['addslide'] = 'Add another slide';
 $string['blocksettings'] = 'Carousel settings';
 $string['configheight'] = 'Height (eg 100px or 50%)';
@@ -34,5 +34,4 @@ $string['slidetitle'] = 'Title';
 $string['slidetext'] = 'Text';
 $string['slideurl'] = 'URL';
 $string['pluginname'] = 'Carousel';
-
 
