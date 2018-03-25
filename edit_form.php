@@ -70,7 +70,8 @@ class block_carousel_edit_form extends block_edit_form {
 
         $slidegroup[] = $mform->createElement('html', '<hr>');
 
-        $this->repeat_elements($slidegroup, 3, $options, 'slides', 'add_slides', 1,
+        $repeatcount = empty($this->block->config->image) ? 3 : count($this->block->config->image);
+        $this->repeat_elements($slidegroup, $repeatcount, $options, 'slides', 'add_slides', 1,
                 get_string('addslide', 'block_carousel'), true);
 
     }
