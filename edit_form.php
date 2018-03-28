@@ -22,6 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+require_once($CFG->dirroot.'/blocks/carousel/lib.php');
+
 /**
  * Form for editing carousel block instances.
  *
@@ -64,8 +66,8 @@ class block_carousel_edit_form extends block_edit_form {
                 get_string('slideurl', 'block_carousel'));
         $options['config_url']['type'] = PARAM_URL;
 
-        $slidegroup[] = $mform->createElement('filepicker', 'config_image',
-                get_string('slideimage', 'block_carousel'), null, array('accepted_types' => 'image'));
+        $slidegroup[] = $mform->createElement('filemanager', 'config_image',
+                get_string('slideimage', 'block_carousel'), null, block_carousel_file_options());
         $options['config_image']['type'] = PARAM_FILE;
 
         $slidegroup[] = $mform->createElement('html', '<hr>');
@@ -76,4 +78,16 @@ class block_carousel_edit_form extends block_edit_form {
 
     }
 
+    function set_data($defaults) {
+        if (!empty($this->block->config) && is_object($this->block->config)) {
+            for ($c = 0; $c < count($this->block->config->image); $c++) {
+                $draftid_editor = file_get_submitted_draft_itemid("image[$c]");
+                file_prepare_draft_area($draftid_editor, $this->block->context->id, 'block_carousel', 'slide', $c,
+                    block_carousel_file_options());
+                $this->block->config->image[$c] = $draftid_editor;
+            }
+        }
+
+        parent::set_data($defaults);
+    }
 }
