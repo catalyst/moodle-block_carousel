@@ -34,4 +34,5 @@ $string['slidetitle'] = 'Title';
 $string['slidetext'] = 'Text';
 $string['slideurl'] = 'URL';
 $string['pluginname'] = 'Carousel';
-
+// Privacy.
+$string['privacy:metadata'] = 'This plugin does not store personal data.';
