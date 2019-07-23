@@ -21,7 +21,7 @@
  * @copyright 2016 Brendan Heywood (brendan@catalyst-au.net)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
+defined('MOODLE_INTERNAL') || die;
 require_once($CFG->dirroot.'/blocks/carousel/lib.php');
 
 /**
@@ -78,13 +78,13 @@ class block_carousel_edit_form extends block_edit_form {
 
     }
 
-    function set_data($defaults) {
+    public function set_data($defaults) {
         if (!empty($this->block->config) && is_object($this->block->config)) {
             for ($c = 0; $c < count($this->block->config->image); $c++) {
-                $draftid_editor = file_get_submitted_draft_itemid("image[$c]");
-                file_prepare_draft_area($draftid_editor, $this->block->context->id, 'block_carousel', 'slide', $c,
+                $draftideditor = file_get_submitted_draft_itemid("image[$c]");
+                file_prepare_draft_area($draftideditor, $this->block->context->id, 'block_carousel', 'slide', $c,
                     block_carousel_file_options());
-                $this->block->config->image[$c] = $draftid_editor;
+                $this->block->config->image[$c] = $draftideditor;
             }
         }
 

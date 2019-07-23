@@ -38,6 +38,8 @@
  * @return bool
  * @todo MDL-36050 improve capability check on stick blocks, so we can check user capability before sending images.
  */
+defined('MOODLE_INTERNAL') || die;
+
 function block_carousel_pluginfile($course, $birecordorcm, $context, $filearea, $args, $forcedownload, array $options=array()) {
     global $DB, $CFG, $USER;
 
