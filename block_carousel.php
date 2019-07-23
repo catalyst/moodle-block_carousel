@@ -104,7 +104,11 @@ class block_carousel extends block_base {
 
         $height = $config->height;
 
-        for ($c = 0; $c < count($config->title); $c++) {
+        foreach ($config->image as $c => $imageid) {
+            if (empty($imageid)) {
+                // Don't show slides without an image.
+                continue;
+            }
             $title = $config->title[$c];
             $text = $config->text[$c];
             $url = $config->url[$c];
@@ -176,6 +180,7 @@ class block_carousel extends block_base {
         for ($c = 0; $c < count($data->image); $c++) {
             file_save_draft_area_files($data->image[$c], $this->context->id, 'block_carousel', 'slide', $c);
         }
+
         parent::instance_config_save($config, $nolongerused);
     }
 

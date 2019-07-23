@@ -84,3 +84,14 @@ function block_carousel_pluginfile($course, $birecordorcm, $context, $filearea, 
     send_stored_file($file, null, 0, $forcedownload, $options);
 }
 
+
+function block_carousel_file_options() {
+    global $CFG;
+
+    return array(
+        'accepted_types' => array('image'),
+        'maxfiles' => 1,
+        'maxbytes' => $CFG->maxbytes,
+        'subdirs' => 0
+    );
+}
