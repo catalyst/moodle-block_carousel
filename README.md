@@ -53,7 +53,7 @@ Issues and feedback
 
 If you have issues please log them in github here:
 
-https://github.com/CatalystIT-AU/moodle-block_carousel/issues
+https://github.com/catalyst/moodle-block_carousel/issues
 
 Or if you want paid support please contact Catalyst IT Australia:
 
