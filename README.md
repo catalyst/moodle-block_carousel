@@ -25,7 +25,7 @@ Installation and Configuration
 
     Using git
 
-     git clone git@github.com:CatalystIT-AU/moodle-block_carousel.git blocks/carousel
+     git clone git@github.com:catalyst/moodle-block_carousel.git blocks/carousel
 
     Or install via the Moodle plugin directory:
 
