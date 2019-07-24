@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/CatalystIT-AU/moodle-block_carousel.svg?branch=master)](https://travis-ci.org/CatalystIT-AU/moodle-block_carousel)
+[![Build Status](https://travis-ci.org/catalyst/moodle-block_carousel.svg?branch=master)](https://travis-ci.org/catalyst/moodle-block_carousel)
 
 https://moodle.org/plugins/block_carousel
 
@@ -77,5 +77,5 @@ This plugin was developed by Catalyst IT Australia:
 
 https://www.catalyst-au.net/
 
-<img alt="Catalyst IT" src="https://cdn.rawgit.com/CatalystIT-AU/moodle-auth_saml2/master/pix/catalyst-logo.svg" width="400">
+<img alt="Catalyst IT" src="https://cdn.rawgit.com/catalyst/moodle-auth_saml2/master/pix/catalyst-logo.svg" width="400">
 
