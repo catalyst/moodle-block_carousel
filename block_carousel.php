@@ -179,8 +179,29 @@ class block_carousel extends block_base {
      */
     public function instance_config_save($data, $nolongerused = false) {
         $config = clone($data);
+        $image = [];
+        $title = [];
+        $text = [];
+        $url = [];
+
+        // Remove slides where there are no image.
         for ($c = 0; $c < count($data->image); $c++) {
-            file_save_draft_area_files($data->image[$c], $this->context->id, 'block_carousel', 'slide', $c);
+            $files = file_get_all_files_in_draftarea($data->image[$c]);
+            if (!empty($files)) {
+                $image[] = $data->image[$c];
+                $title[] = $data->title[$c];
+                $text[] = $data->text[$c];
+                $url[] = $data->url[$c];
+            }
+        }
+        // Update config values.
+        $config->image = $image;
+        $config->title = $title;
+        $config->text = $text;
+        $config->url = $url;
+
+        for ($c = 0; $c < count($config->image); $c++) {
+            file_save_draft_area_files($config->image[$c], $this->context->id, 'block_carousel', 'slide', $c);
         }
 
         parent::instance_config_save($config, $nolongerused);
