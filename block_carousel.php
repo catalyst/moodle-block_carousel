@@ -126,6 +126,15 @@ class block_carousel extends block_base {
 
                 $image = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(),
                         $file->get_filearea(), $file->get_itemid(), $file->get_filepath(), $file->get_filename());
+
+                $imageinfo = $file->get_imageinfo();
+                if (isset($imageinfo["width"]) && isset($imageinfo["height"])) {
+                    $ratio = ($imageinfo["width"] / $imageinfo["height"]);
+                    $paddingbottom = (round((1 / $ratio), 4) * 100) . '%';
+                    $width = round(($ratio * $height), 2) . "px";
+                } else {
+                    $paddingbottom = $height;
+                }
             }
 
             // Wrapping the slide in an object is a neat trick allowing the slide to be a link
@@ -135,9 +144,13 @@ class block_carousel extends block_base {
                 $html .= html_writer::start_tag('object');
             }
             $show = ($c == 0) ? 'block' : 'none';
+
+            if (!empty($width)) {
+                $html .= html_writer::start_tag('div', array('style' => "max-width: $width; margin: auto;"));
+            }
             $html .= html_writer::start_tag('div', array(
                 'class' => 'slidewrap',
-                'style' => "padding-bottom: $height; background-image: url($image); display: $show;"
+                'style' => "padding-bottom: $paddingbottom; background-image: url($image); display: $show;"
             ));
             if ($title) {
                 $html .= html_writer::tag('h4', $title, array('class' => 'title'));
@@ -146,6 +159,9 @@ class block_carousel extends block_base {
                 $html .= html_writer::tag('div', $text, array('class' => 'text'));
             }
             $html .= html_writer::end_tag('div');
+            if (!empty($width)) {
+                $html .= html_writer::end_tag('div');
+            }
             if ($url) {
                 $html .= html_writer::end_tag('object');
                 $html .= html_writer::end_tag('a');
