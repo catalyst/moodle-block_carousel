@@ -137,8 +137,15 @@ class block_carousel extends block_base {
             $show = ($c == 0) ? 'block' : 'none';
             $html .= html_writer::start_tag('div', array(
                 'class' => 'slidewrap',
-                'style' => "padding-bottom: $height; background-image: url($image); display: $show;"
+                'style' => "padding-bottom: $height; display: $show;"
             ));
+
+            if ($image) {
+                $html .= html_writer::tag('img', '', array(
+                    'class' => 'image',
+                    'src' => "$image",
+                    'style' => "height: $height"));
+            }
             if ($title) {
                 $html .= html_writer::tag('h4', $title, array('class' => 'title'));
             }

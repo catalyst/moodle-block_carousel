@@ -5,8 +5,12 @@
     position: relative;
     height: 0px;
     color: white;
-    background-size: cover;
-    background-position: 50% 50%;
+}
+
+.block_carousel .slidewrap .image {
+    margin-left: auto;
+    margin-right: auto;
+    display: inherit;
 }
 
 .block_carousel .slidewrap .title {
