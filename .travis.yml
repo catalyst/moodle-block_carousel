@@ -13,6 +13,12 @@ cache:
   directories:
     - $HOME/.composer/cache
 
+addons:
+  postgresql: "9.4"
+
+services:
+  - mysql
+
 php:
  - 7.2
 
