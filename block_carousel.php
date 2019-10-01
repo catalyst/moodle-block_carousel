@@ -106,6 +106,11 @@ class block_carousel extends block_base {
 
         $height = $config->height;
 
+        // Default value.
+        if (empty($height)) {
+            $height = "50%";
+        }
+
         foreach ($config->image as $c => $imageid) {
             if (empty($imageid)) {
                 // Don't show slides without an image.
@@ -129,9 +134,14 @@ class block_carousel extends block_base {
 
                 $imageinfo = $file->get_imageinfo();
                 if (isset($imageinfo["width"]) && isset($imageinfo["height"])) {
-                    $ratio = ($imageinfo["width"] / $imageinfo["height"]);
-                    $paddingbottom = (round((1 / $ratio), 4) * 100) . '%';
-                    $width = round(($ratio * $height), 2) . "px";
+                    preg_match('!\d+!', $height, $matches);
+                    if (isset($matches[0])) {
+                        $heightvalue = $matches[0];
+                        $unit = trim(str_replace($heightvalue, '', $height));
+                        $ratio = ($imageinfo["width"] / $imageinfo["height"]);
+                        $paddingbottom = (round((1 / $ratio), 4) * 100) . '%';
+                        $width = (round(($ratio * $heightvalue), 2)) . $unit;
+                    }
                 } else {
                     $paddingbottom = $height;
                 }
