@@ -83,7 +83,7 @@ class block_carousel extends block_base {
      * The html for the carousel
      */
     public function get_content() {
-        global $CFG;
+        global $CFG, $DB, $PAGE;
 
         require_once($CFG->libdir . '/filelib.php');
 
@@ -97,7 +97,7 @@ class block_carousel extends block_base {
         $config = $this->config;
         $this->content = new stdClass;
 
-        if (empty($config)) {
+        if (empty($config) || empty($config->order)) {
             $this->content->text = '';
             return $this->content;
         }
@@ -111,16 +111,21 @@ class block_carousel extends block_base {
             $height = "50%";
         }
 
-        foreach ($config->image as $c => $imageid) {
-            if (empty($imageid)) {
-                // Don't show slides without an image.
+        // TODO : Cache ordering and records.
+        $order = explode(',', $config->order);
+        $numslides = count($order);
+        foreach ($order as $slideid) {
+            $slide = $DB->get_record('block_carousel', ['id' => $slideid]);
+
+            if ($slide->disabled) {
                 continue;
             }
-            $title = $config->title[$c];
-            $text = $config->text[$c];
-            $url = $config->url[$c];
+
+            $title = $slide->title;
+            $text = $slide->text;
+            $url = $slide->url;
             $html .= html_writer::start_tag('div'); // This will be modified by slick.
-            $files   = $fs->get_area_files($this->context->id, 'block_carousel', 'slide', $c);
+            $files   = $fs->get_area_files($this->context->id, 'block_carousel', 'slide', $slideid);
 
             $image = '';
             foreach ($files as $file) {
@@ -150,10 +155,21 @@ class block_carousel extends block_base {
             // Wrapping the slide in an object is a neat trick allowing the slide to be a link
             // and for the text within it to also have sub-links.
             if ($url) {
-                $html .= html_writer::start_tag('a', array('href' => $url, 'class' => 'slidelink'));
+                $attr = [
+                    'href' => $url,
+                    'class' => 'slidelink',
+                    'id' => 'id_slide' . $slideid
+                ];
+                if ($slide->newtab) {
+                    $attr['target'] = '_blank';
+                }
+
+                $html .= html_writer::start_tag('a', $attr);
+                // Add interaction event listener on the a tag.
+                $PAGE->requires->js_call_amd('block_carousel/interaction', 'init', [$slideid]);
                 $html .= html_writer::start_tag('object');
             }
-            $show = ($c == 0) ? 'block' : 'none';
+            $show = ($numslides == 0) ? 'block' : 'none';
 
             if (!empty($width)) {
                 $html .= html_writer::start_tag('div', array('style' => "max-width: $width; margin: auto;"));
@@ -204,32 +220,13 @@ class block_carousel extends block_base {
      * @param boolean $nolongerused boolean Not used
      */
     public function instance_config_save($data, $nolongerused = false) {
-        $config = clone($data);
-        $image = [];
-        $title = [];
-        $text = [];
-        $url = [];
-
-        // Remove slides where there are no image.
-        for ($c = 0; $c < count($data->image); $c++) {
-            $files = file_get_all_files_in_draftarea($data->image[$c]);
-            if (!empty($files)) {
-                $image[] = $data->image[$c];
-                $title[] = $data->title[$c];
-                $text[] = $data->text[$c];
-                $url[] = $data->url[$c];
-            }
+        $config = new stdClass();
+        $config->height = $data->height;
+        $config->playspeed = $data->playspeed;
+        // Saving needs to maintain order.
+        if (!empty($this->config) && !empty($this->config->order)) {
+            $config->order = $this->config->order;
         }
-        // Update config values.
-        $config->image = $image;
-        $config->title = $title;
-        $config->text = $text;
-        $config->url = $url;
-
-        for ($c = 0; $c < count($config->image); $c++) {
-            file_save_draft_area_files($config->image[$c], $this->context->id, 'block_carousel', 'slide', $c);
-        }
-
         parent::instance_config_save($config, $nolongerused);
     }
 
@@ -242,4 +239,3 @@ class block_carousel extends block_base {
         return true;
     }
 }
-
