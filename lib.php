@@ -68,7 +68,7 @@ function block_carousel_pluginfile($course, $birecordorcm, $context, $filearea, 
         // At this point there is no way to check SYSTEM context, so ignoring it.
     }
 
-    if ($filearea !== 'slide') {
+    if ($filearea !== 'content') {
         send_file_not_found();
     }
 

@@ -124,8 +124,9 @@ class block_carousel extends block_base {
             $title = $slide->title;
             $text = $slide->text;
             $url = $slide->url;
+            $modalcontent = $slide->modalcontent;
             $html .= html_writer::start_tag('div'); // This will be modified by slick.
-            $files   = $fs->get_area_files($this->context->id, 'block_carousel', 'slide', $slideid);
+            $files   = $fs->get_area_files($this->context->id, 'block_carousel', 'content', $slideid);
 
             $image = '';
             foreach ($files as $file) {
@@ -154,14 +155,18 @@ class block_carousel extends block_base {
 
             // Wrapping the slide in an object is a neat trick allowing the slide to be a link
             // and for the text within it to also have sub-links.
-            if ($url) {
+            if ($modalcontent || $url) {
                 $attr = [
-                    'href' => $url,
                     'class' => 'slidelink',
                     'id' => 'id_slide' . $slideid
                 ];
-                if ($slide->newtab) {
-                    $attr['target'] = '_blank';
+                if ($modalcontent) {
+                    $PAGE->requires->js_call_amd('block_carousel/modal', 'init', [$slideid, $modalcontent]);
+                } else if ($url) {
+                    $attr['href'] = $url;
+                    if ($slide->newtab) {
+                        $attr['target'] = '_blank';
+                    }
                 }
 
                 $html .= html_writer::start_tag('a', $attr);

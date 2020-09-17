@@ -66,7 +66,7 @@ switch ($action) {
             $DB->delete_records('block_carousel', ['id' => $id]);
             // Delete file for this slide.
             $storage = get_file_storage();
-            $storage->delete_area_files($context->id, 'block_carousel', 'slide', $id);
+            $storage->delete_area_files($context->id, 'block_carousel', 'image', $id);
             \block_carousel\local\slide_manager::remove_id_from_order($blockid, $id);
 
             redirect($prevurl);
@@ -77,8 +77,9 @@ switch ($action) {
     case 'edit':
         $data = $DB->get_record('block_carousel', ['id' => $id]);
         $draftitemid = file_get_submitted_draft_itemid('content');
-        file_prepare_draft_area($draftitemid, $context->id, 'block_carousel', 'slide', $id);
+        file_prepare_draft_area($draftitemid, $context->id, 'block_carousel', 'content', $id);
         $data->content = $draftitemid;
+        $data->modal = ['text' => $data->modalcontent, 'format' => FORMAT_HTML];
         break;
 
     case 'clone':
@@ -93,7 +94,7 @@ switch ($action) {
         $files = $storage->get_area_files(
             $context->id,
             'block_carousel',
-            'slide',
+            'content',
             $id
         );
         foreach ($files as $file) {
@@ -129,7 +130,7 @@ if ($form->is_cancelled()) {
     $record->interactions = 0;
     $record->newtab = $fromform->newtab;
     $record->disabled = 0;
-    $record->modalcontent = format_text($fromform->modal);
+    $record->modalcontent = format_text($fromform->modal['text'], $fromform->modal['format']);
     $record->contenttype = 'image';
     if ($action !== 'edit') {
         $id = $DB->insert_record('block_carousel', $record, true);
@@ -140,7 +141,7 @@ if ($form->is_cancelled()) {
         $DB->update_record('block_carousel', $record);
         $recordid = $id;
     }
-    file_save_draft_area_files($fromform->content, $context->id, 'block_carousel', 'image', $recordid);
+    file_save_draft_area_files($fromform->content, $context->id, 'block_carousel', 'content', $recordid);
     redirect($prevurl);
 } else {
     echo $OUTPUT->header();

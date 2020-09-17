@@ -45,7 +45,7 @@ class block_carousel_upgrade_helper {
                         $i
                     );
                     foreach ($files as $file) {
-                        $storage->create_file_from_storedfile(['itemid' => $id, 'filearea' => 'image'], $file);
+                        $storage->create_file_from_storedfile(['itemid' => $id, 'filearea' => 'content'], $file);
                     }
                     // Now cleanup the original file.
                     $storage->delete_area_files(

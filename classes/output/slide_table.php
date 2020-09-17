@@ -32,7 +32,7 @@ class slide_table extends \flexible_table implements \renderable {
         $this->define_headers(array(
                 get_string('slidetitle', 'block_carousel'),
                 get_string('slidetext', 'block_carousel'),
-                get_string('url'),
+                get_string('link', 'block_carousel'),
                 get_string('content'),
                 get_string('interactions', 'block_carousel'),
                 get_string('actions'),
@@ -57,12 +57,16 @@ class slide_table extends \flexible_table implements \renderable {
             $data = [];
             $data['title'] = $rows[$id]->title;
             $data['text'] = $rows[$id]->text;
-            $data['url'] = $rows[$id]->url;
+            if ($rows[$id]->modalcontent) {
+                $data['url'] = get_string('modal', 'block_carousel');
+            } else {
+                $data['url'] = $rows[$id]->url;
+            }
             $data['interactions'] = $rows[$id]->interactions;
 
             // Get file preview.
             $storage = get_file_storage();
-            $files = $storage->get_area_files($context->id, 'block_carousel', 'slide', $id);
+            $files = $storage->get_area_files($context->id, 'block_carousel', 'content', $id);
             // Search files for first found content file.
             foreach ($files as $file) {
                 if ($file->is_valid_image()) {
