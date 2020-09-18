@@ -4,7 +4,6 @@ language: php
 notifications:
   email:
     recipients:
-    - brendan.heywood@gmail.com
     - marcus@boon.mx
 
 sudo: false
