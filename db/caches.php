@@ -15,15 +15,19 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details
+ * Cache definition for slides
  *
  * @package   block_carousel
- * @copyright 2016 Brendan Heywood (brendan@catalyst-au.net)
+ * @author    Peter Burnett <peterburnett@catalyst-au.net>
+ * @copyright Catalyst IT
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die;
 
-defined('MOODLE_INTERNAL') || die();
-
-$plugin->version   = 2020091703;        // The current plugin version (Date: YYYYMMDDXX)
-$plugin->requires  = 2015111000;        // Requires this Moodle version.
-$plugin->component = 'block_carousel';  // Full name of the plugin (used for diagnostics).
+$definitions = array(
+    'slides' => array(
+        'mode' => cache_store::MODE_APPLICATION,
+        'datasource' => '\block_carousel\cache\slide_cache',
+        'staticacceleration' => true
+    ),
+);

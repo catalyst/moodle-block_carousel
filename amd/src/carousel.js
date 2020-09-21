@@ -20,7 +20,7 @@
  * @copyright 2016 Brendan Heywood (brendan@catalyst-au.net)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-define(['jquery', 'block_carousel/slick'], function($) {
+define(['jquery', 'core/modal_factory', 'block_carousel/slick'], function($, ModalFactory) {
     return {
         init: function(blockid, playspeed) {
             $('#carousel' + blockid + ' .slidewrap').show();
@@ -32,6 +32,36 @@ define(['jquery', 'block_carousel/slick'], function($) {
                 adaptiveHeight: true,
                 autoplay: true,
                 autoplaySpeed: playspeed
+            });
+        },
+
+        modal: function(rowid, modalContent) {
+            var slide = document.querySelector('#id_slide' + rowid);
+            slide.addEventListener('click', function(){
+                ModalFactory.create(
+                    {
+                        type: ModalFactory.types.CANCEL,
+                        title: '',
+                        body: modalContent
+                    }
+                ).then($.proxy(function(modal) {
+                    modal.setLarge();
+                    modal.show();
+                }));
+            });
+        },
+
+        videocontrol: function(blockid, slideid) {
+            var slide = document.querySelector('#carousel' + blockid);
+            slide.addEventListener('afterChange', function() {
+                var video = document.querySelector('#id_slidevideo' + slideid);
+                if (slide.attr('tabindex') ==  0) {
+                    // This is the active slide. Unpause the video with this slideID.
+                    video.play();
+                } else {
+                    // Non active slide. Pause it.
+                    video.pause();
+                }
             });
         }
     };

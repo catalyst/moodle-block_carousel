@@ -91,7 +91,7 @@ function block_carousel_file_options() {
     global $CFG;
 
     return array(
-        'accepted_types' => array('image'),
+        'accepted_types' => array('image', 'web_video'),
         'maxfiles' => 1,
         'maxbytes' => $CFG->maxbytes,
         'subdirs' => 0

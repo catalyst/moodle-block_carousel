@@ -111,46 +111,33 @@ class block_carousel extends block_base {
             $height = "50%";
         }
 
-        // TODO : Cache ordering and records.
         $order = explode(',', $config->order);
-        $numslides = count($order);
-        foreach ($order as $slideid) {
-            $slide = $DB->get_record('block_carousel', ['id' => $slideid]);
 
-            if ($slide->disabled) {
+        $cache = cache::make('block_carousel', 'slides');
+        $data = $cache->get_many($order);
+
+        $numslides = count($order);
+        foreach ($data as $slideid => $data) {
+            $data = (object) $data;
+            if ($data->disabled) {
                 continue;
             }
 
-            $title = $slide->title;
-            $text = $slide->text;
-            $url = $slide->url;
-            $modalcontent = $slide->modalcontent;
-            $html .= html_writer::start_tag('div'); // This will be modified by slick.
-            $files   = $fs->get_area_files($this->context->id, 'block_carousel', 'content', $slideid);
+            $title = $data->title;
+            $text = $data->text;
+            $url = $data->url;
+            $modalcontent = $data->modalcontent;
+            $contenttype = $data->contenttype;
+            $html .= html_writer::start_tag('div'); // This will be modified by slick
 
-            $image = '';
-            foreach ($files as $file) {
-
-                if ($file->get_filesize() == 0) {
-                    continue; // TODO fix the broken dud records.
-                }
-
-                $image = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(),
-                        $file->get_filearea(), $file->get_itemid(), $file->get_filepath(), $file->get_filename());
-
-                $imageinfo = $file->get_imageinfo();
-                if (isset($imageinfo["width"]) && isset($imageinfo["height"])) {
-                    preg_match('!\d+!', $height, $matches);
-                    if (isset($matches[0])) {
-                        $heightvalue = $matches[0];
-                        $unit = trim(str_replace($heightvalue, '', $height));
-                        $ratio = ($imageinfo["width"] / $imageinfo["height"]);
-                        $paddingbottom = (round((1 / $ratio), 4) * 100) . '%';
-                        $width = (round(($ratio * $heightvalue), 2)) . $unit;
-                    }
-                } else {
-                    $paddingbottom = $height;
-                }
+            $paddingbottom = $height;
+            preg_match('!\d+!', $height, $matches);
+            if (isset($matches[0])) {
+                $heightvalue = $matches[0];
+                $unit = trim(str_replace($heightvalue, '', $height));
+                $ratio = ($data->widthres / $data->heightres);
+                $paddingbottom = (round((1 / $ratio), 4) * 100) . '%';
+                $width = (round(($ratio * $heightvalue), 2)) . $unit;
             }
 
             // Wrapping the slide in an object is a neat trick allowing the slide to be a link
@@ -161,7 +148,7 @@ class block_carousel extends block_base {
                     'id' => 'id_slide' . $slideid
                 ];
                 if ($modalcontent) {
-                    $PAGE->requires->js_call_amd('block_carousel/modal', 'init', [$slideid, $modalcontent]);
+                    $PAGE->requires->js_call_amd('block_carousel/carousel', 'modal', [$slideid, $modalcontent]);
                 } else if ($url) {
                     $attr['href'] = $url;
                     if ($slide->newtab) {
@@ -172,17 +159,39 @@ class block_carousel extends block_base {
                 $html .= html_writer::start_tag('a', $attr);
                 // Add interaction event listener on the a tag.
                 $PAGE->requires->js_call_amd('block_carousel/interaction', 'init', [$slideid]);
+                // If this is a video, setup the control JS.
+                if ($contenttype === 'video') {
+                    $PAGE->requires->js_call_amd('block_carousel/carousel', 'videocontrol', [$blockid, $slideid]);
+                }
                 $html .= html_writer::start_tag('object');
             }
             $show = ($numslides == 0) ? 'block' : 'none';
 
             if (!empty($width)) {
-                $html .= html_writer::start_tag('div', array('style' => "max-width: $width; margin: auto;"));
+                $html .= html_writer::start_tag('div', array('style' => "max-width: {$width}; margin: auto;"));
+            }
+
+            $style = "padding-bottom: $paddingbottom; display: $show;";
+            if ($contenttype === 'image') {
+                $style .= " background-image: url($data->link);";
             }
             $html .= html_writer::start_tag('div', array(
                 'class' => 'slidewrap',
-                'style' => "padding-bottom: $paddingbottom; background-image: url($image); display: $show;"
+                'style' => $style,
             ));
+            if ($contenttype === 'video') {
+                // Setup the video tag.
+                $html .= html_writer::start_tag('video', [
+                    'id' => 'id_slidevideo' . $slideid,
+                    'style' => "max-width: 100%",
+                    'muted' => 'muted',
+                    'autoplay' => 'autoplay',
+                    'loop' => 'loop',
+                ]);
+                $html .= html_writer::tag('source', null, ['src' => $data->link]);
+                $html .= html_writer::end_tag('video');
+            }
+
             if ($title) {
                 $html .= html_writer::tag('h4', $title, array('class' => 'title'));
             }
@@ -193,7 +202,7 @@ class block_carousel extends block_base {
             if (!empty($width)) {
                 $html .= html_writer::end_tag('div');
             }
-            if ($url) {
+            if ($modalcontent || $url) {
                 $html .= html_writer::end_tag('object');
                 $html .= html_writer::end_tag('a');
             }

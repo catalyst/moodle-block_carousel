@@ -40,5 +40,10 @@ $string['slidetitle'] = 'Title';
 $string['slidetext'] = 'Text';
 $string['slideurl'] = 'URL';
 $string['pluginname'] = 'Carousel';
+
+// Settings.
+$string['settings:ffprobe:pathtoffprobe'] = 'FFProbe binary path';
+$string['settings:ffprobe:pathtoffprobe_desc'] = 'The path to the FFProbe binary on the server running Moodle.';
+
 // Privacy.
 $string['privacy:metadata'] = 'This plugin does not store personal data.';

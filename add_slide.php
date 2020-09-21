@@ -42,6 +42,7 @@ require_capability('moodle/block:edit', $context);
 $editurl = "carousel_{$blockid}_editurl";
 $prevurl = $SESSION->$editurl;
 $prevurl->params(['sesskey' => sesskey(), 'bui_editid' => $blockid]);
+$storage = get_file_storage();
 
 // Form data.
 $data = null;
@@ -65,7 +66,6 @@ switch ($action) {
             require_sesskey();
             $DB->delete_records('block_carousel', ['id' => $id]);
             // Delete file for this slide.
-            $storage = get_file_storage();
             $storage->delete_area_files($context->id, 'block_carousel', 'image', $id);
             \block_carousel\local\slide_manager::remove_id_from_order($blockid, $id);
 
@@ -142,6 +142,27 @@ if ($form->is_cancelled()) {
         $recordid = $id;
     }
     file_save_draft_area_files($fromform->content, $context->id, 'block_carousel', 'content', $recordid);
+
+    // Now that the file is saved, the type can be inspected now it is ingested into the file API.
+    $files = $storage->get_area_files(
+        $context->id,
+        'block_carousel',
+        'content',
+        $recordid
+    );
+
+    // Look and see if there is a valid image.
+    $image = false;
+    foreach ($files as $file) {
+        if ($file->is_valid_image()) {
+            $image = true;
+        }
+    }
+    if (!$image) {
+        // No file was a valid image. Update row to video mode.
+        $DB->set_field('block_carousel', 'contenttype', 'video', ['id' => $recordid]);
+    }
+
     redirect($prevurl);
 } else {
     echo $OUTPUT->header();

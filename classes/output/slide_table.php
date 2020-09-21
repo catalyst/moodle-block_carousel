@@ -69,7 +69,7 @@ class slide_table extends \flexible_table implements \renderable {
             $files = $storage->get_area_files($context->id, 'block_carousel', 'content', $id);
             // Search files for first found content file.
             foreach ($files as $file) {
-                if ($file->is_valid_image()) {
+                if (!$file->is_directory()) {
                     $url = \moodle_url::make_pluginfile_url(
                         $file->get_contextid(),
                         $file->get_component(),
