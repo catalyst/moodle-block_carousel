@@ -97,7 +97,7 @@ class slide_cache implements \cache_data_source {
                 $command = $pathtoffprobe . ' -of json -v error -show_format -show_streams ' .  escapeshellarg($path);
                 $json = shell_exec($command);
                 $rawresults = json_decode($json);
-                //  Just grab the first video stream.
+                // Just grab the first video stream.
                 foreach ($rawresults->streams as $stream) {
                     if ($stream->codec_type === 'video') {
                         $data['heightres'] = $stream->height;

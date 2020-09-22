@@ -37,7 +37,7 @@ class block_carousel_edit_form extends block_edit_form {
      * @param object $mform the form being built.
      */
     protected function specific_definition($mform) {
-        global $PAGE, $SESSION;
+        global $SESSION;
 
         $mform->addElement('header', 'configheader', get_string('blocksettings', 'block_carousel'));
 
@@ -52,15 +52,13 @@ class block_carousel_edit_form extends block_edit_form {
         $mform->addElement('header', 'configheaderslides', get_string('slideheader', 'block_carousel'));
         $mform->setExpanded('configheaderslides');
 
-        // Slides table
+        // Slides table.
         $blockid = $this->block->instance->id;
         // Setup the return url for slide actions.
         $editurl = "carousel_{$blockid}_editurl";
-        $SESSION->$editurl = $PAGE->url;
+        $SESSION->$editurl = $this->page->url;
         $table = new \block_carousel\output\slide_table('carousel_slides');
-        $order = !empty($this->block->config) && !empty($this->block->config->order)
-            ? explode(',', $this->block->config->order) : [];
-        $html = $table->out($blockid, $order);
+        $html = $table->out($blockid);
         $mform->addElement('html', $html);
     }
 }

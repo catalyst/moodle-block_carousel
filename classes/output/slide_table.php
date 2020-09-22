@@ -1,14 +1,42 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Slide table for block_carousel
+ *
+ * @package   block_carousel
+ * @author    Peter Burnett <peterburnett@catalyst-au.net>
+ * @copyright Catalyst IT 2020
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 namespace block_carousel\output;
 
 use context_block;
 
 defined('MOODLE_INTERNAL') || die();
-
 require_once($CFG->libdir . '/tablelib.php');
 
 class slide_table extends \flexible_table implements \renderable {
 
+    /**
+     * The current slide number.
+     *
+     * @var int
+     */
     private $slideno;
 
     /**
@@ -49,8 +77,16 @@ class slide_table extends \flexible_table implements \renderable {
         $this->slideno = 1;
     }
 
-    public function populate_block_table($blockid, $currorder) {
+    /**
+     * Adds block data to the table.
+     *
+     * @param int $blockid the blockid to get data for.
+     * @return void
+     */
+    public function populate_block_table($blockid) {
         global $DB, $OUTPUT;
+
+        $currorder = \block_carousel\local\slide_manager::get_current_order($blockid);
         $context = context_block::instance($blockid);
         $rows = $DB->get_records('block_carousel', ['blockid' => $blockid]);
 
@@ -67,7 +103,13 @@ class slide_table extends \flexible_table implements \renderable {
                 $data['url'] = get_string('none');
             }
             $data['interactions'] = $rows[$id]->interactions;
-            $data['timed'] = $rows[$id]->timed ? get_string('yes') : get_string('no');
+
+            // Is it a timed release?
+            if (!empty($rows[$id]->timedstart) || !empty($rows[$id]->timedend)) {
+                $data['timed'] = get_string('yes');
+            } else {
+                $data['timed'] = get_string('no');
+            }
 
             // Get file preview.
             $storage = get_file_storage();
@@ -137,7 +179,14 @@ class slide_table extends \flexible_table implements \renderable {
         }
     }
 
-    public function out($id, $currorder) {
+    /**
+     * Adds data to the table then returns the table HTML.
+     *
+     * @param  $id the block id to view.
+     * @param [type] $currorder the current slide ordering.
+     * @return void
+     */
+    public function out($id) {
         global $DB, $PAGE;
 
         // Setup JS for DnD.
@@ -151,7 +200,7 @@ class slide_table extends \flexible_table implements \renderable {
         $count = $DB->count_records('block_carousel', ['id' => $id]);
         $this->pagesize($count, $count);
 
-        $this->populate_block_table($id, $currorder);
+        $this->populate_block_table($id);
         $this->finish_output();
 
         // Add slide button.
@@ -173,7 +222,7 @@ class slide_table extends \flexible_table implements \renderable {
      * @return string $html html code for the row passed.
      */
     public function get_row_html($row, $classname = '') {
-        static $suppress_lastrow = NULL;
+        static $suppresslastrow = null;
         $rowclasses = array();
 
         if ($classname) {
@@ -186,8 +235,8 @@ class slide_table extends \flexible_table implements \renderable {
         $html .= \html_writer::start_tag('tr', array('class' => implode(' ', $rowclasses), 'id' => $rowid,
             'data-name' => "Slide {$this->slideno}"));
 
-        // If we have a separator, print it
-        if ($row === NULL) {
+        // If we have a separator, print it.
+        if ($row === null) {
             $colcount = count($this->columns);
             $html .= \html_writer::tag('td', \html_writer::tag('div', '',
                     array('class' => 'tabledivider')), array('colspan' => $colcount));
@@ -210,7 +259,7 @@ class slide_table extends \flexible_table implements \renderable {
                 }
 
                 if (empty($this->prefs['collapse'][$column])) {
-                    if ($this->column_suppress[$column] && $suppress_lastrow !== NULL && $suppress_lastrow[$index] === $data) {
+                    if ($this->column_suppress[$column] && $suppresslastrow !== null && $suppresslastrow[$index] === $data) {
                         $content = '&nbsp;';
                     } else {
                         $content = $data;
@@ -225,9 +274,9 @@ class slide_table extends \flexible_table implements \renderable {
 
         $html .= \html_writer::end_tag('tr');
 
-        $suppress_enabled = array_sum($this->column_suppress);
-        if ($suppress_enabled) {
-            $suppress_lastrow = $row;
+        $suppressenabled = array_sum($this->column_suppress);
+        if ($suppressenabled) {
+            $suppresslastrow = $row;
         }
         $this->currentrow++;
         return $html;

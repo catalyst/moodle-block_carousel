@@ -18,7 +18,6 @@
         <FIELD NAME="disabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="timedstart" TYPE="int" LENGTH="15" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="timedend" TYPE="int" LENGTH="15" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="timed" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

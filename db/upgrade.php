@@ -22,15 +22,15 @@
  * @copyright   Catalyst IT Australia
  */
 
-require_once(__DIR__ . '/upgradelib.php');
-
 defined('MOODLE_INTERNAL') || die();
+
+require_once(__DIR__ . '/upgradelib.php');
 
 function xmldb_block_carousel_upgrade($oldversion) {
     global $DB;
 
     $dbman = $DB->get_manager();
-    if ($oldversion < 2020091700) {
+    if ($oldversion < 2020092200) {
 
         // Define table block_carousel to be created.
         $table = new xmldb_table('block_carousel');
@@ -48,7 +48,6 @@ function xmldb_block_carousel_upgrade($oldversion) {
         $table->add_field('disabled', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
         $table->add_field('timedstart', XMLDB_TYPE_INTEGER, '15', null, null, null, null);
         $table->add_field('timedend', XMLDB_TYPE_INTEGER, '15', null, null, null, null);
-        $table->add_field('timed', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
 
         // Adding keys to table block_carousel.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
@@ -58,11 +57,11 @@ function xmldb_block_carousel_upgrade($oldversion) {
             $dbman->create_table($table);
         }
 
-        //Run upgrade script.
+        // Run upgrade script.
         \block_carousel_upgrade_helper::upgrade_carousels_to_db();
 
         // Carousel savepoint reached.
-        upgrade_block_savepoint(true, 2020091700, 'carousel');
+        upgrade_block_savepoint(true, 2020092200, 'carousel');
     }
 
     return true;

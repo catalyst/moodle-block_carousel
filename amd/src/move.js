@@ -14,7 +14,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Load the carousel. This is adapted from the XMLDB editor in 3.6+
+ * Drag and drop order handler. This is adapted from the XMLDB editor in 3.6+
  *
  * @module    block_carousel/move
  * @copyright 2020 Peter Burnett <peterburnett@catalyst-au.net>

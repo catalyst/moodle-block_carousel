@@ -37,7 +37,6 @@ $PAGE->set_url($url);
 
 require_login();
 require_capability('moodle/block:edit', $context);
-// TODO better prevurl
 
 $editurl = "carousel_{$blockid}_editurl";
 $prevurl = $SESSION->$editurl;
@@ -130,8 +129,14 @@ if ($form->is_cancelled()) {
     $record->interactions = 0;
     $record->newtab = $fromform->newtab;
     $record->disabled = 0;
-    $record->modalcontent = $fromform->modal['text'];
-    $record->timed = $fromform->timed;
+
+    $modaltext = trim(html_to_text($fromform->modal['text']));
+    if (!empty($modaltext)) {
+        // Store the richtext, its not just whitespace.
+        $record->modalcontent = $fromform->modal['text'];
+    } else {
+        $record->modalcontent = '';
+    }
     $record->timedstart = $fromform->timedstart;
     $record->timedend = $fromform->timedend;
 

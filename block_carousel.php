@@ -59,7 +59,7 @@ class block_carousel extends block_base {
      *
      * @return boolean
      */
-    function has_config() {
+    public function has_config() {
         return true;
     }
 
@@ -93,7 +93,7 @@ class block_carousel extends block_base {
      * The html for the carousel
      */
     public function get_content() {
-        global $CFG, $PAGE;
+        global $CFG;
 
         require_once($CFG->libdir . '/filelib.php');
 
@@ -131,10 +131,9 @@ class block_carousel extends block_base {
             }
 
             // Check release timing.
-            if ($data->timed) {
-                if (time() < $data->timedstart || time() > $data->timedend) {
-                    continue;
-                }
+            if ((!empty($data->timedstart) && time() < $data->timedstart) ||
+                (!empty($data->timedstart) && time() > $data->timedend)) {
+                continue;
             }
 
             $title = $data->title;
@@ -142,7 +141,7 @@ class block_carousel extends block_base {
             $url = $data->url;
             $modalcontent = format_text($data->modalcontent);
             $contenttype = $data->contenttype;
-            $html .= html_writer::start_tag('div', ['id' => 'id_slidecontainer' . $slideid]); // This will be modified by slick
+            $html .= html_writer::start_tag('div', ['id' => 'id_slidecontainer' . $slideid]); // This will be modified by slick.
 
             $paddingbottom = $height;
             preg_match('!\d+!', $height, $matches);
@@ -162,7 +161,8 @@ class block_carousel extends block_base {
                     'id' => 'id_slide' . $slideid
                 ];
                 if ($modalcontent) {
-                    $PAGE->requires->js_call_amd('block_carousel/carousel', 'modal', [$slideid, $modalcontent]);
+                    $this->page->requires->js_call_amd('block_carousel/carousel', 'modal', [$slideid, $modalcontent, $title]);
+                    $attr['style'] = 'cursor: pointer;';
                 } else if ($url) {
                     $attr['href'] = $url;
                     if ($data->newtab) {
@@ -172,7 +172,7 @@ class block_carousel extends block_base {
 
                 $html .= html_writer::start_tag('a', $attr);
                 // Add interaction event listener on the a tag.
-                $PAGE->requires->js_call_amd('block_carousel/interaction', 'init', [$slideid]);
+                $this->page->requires->js_call_amd('block_carousel/carousel', 'interaction', [$slideid]);
                 $html .= html_writer::start_tag('object');
             }
             $show = ($numslides == 0) ? 'block' : 'none';
@@ -202,7 +202,7 @@ class block_carousel extends block_base {
                 $html .= html_writer::end_tag('video');
 
                 // Setup the video control JS.
-                $PAGE->requires->js_call_amd('block_carousel/carousel', 'videocontrol', [$blockid, $slideid]);
+                $this->page->requires->js_call_amd('block_carousel/carousel', 'videocontrol', [$blockid, $slideid]);
             }
 
             if ($title) {
@@ -222,8 +222,8 @@ class block_carousel extends block_base {
             $html .= html_writer::end_tag('div');
         }
 
-        $this->page->requires->css('/blocks/carousel/extlib/slick-1.5.9/slick/slick.css');
-        $this->page->requires->css('/blocks/carousel/extlib/slick-1.5.9/slick/slick-theme.css');
+        $this->page->requires->css('/blocks/carousel/extlib/slick-1.8.1/slick/slick.css');
+        $this->page->requires->css('/blocks/carousel/extlib/slick-1.8.1/slick/slick-theme.css');
         $this->page->requires->js_call_amd('block_carousel/carousel', 'init', array($blockid, $config->playspeed * 1000));
 
         $html .= html_writer::end_tag('div');

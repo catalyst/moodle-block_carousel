@@ -46,25 +46,25 @@ class add_slide extends \moodleform {
         $mform->setType('newtab', PARAM_BOOL);
         $mform->setDefault('newtab', 1);
 
-        $mform->addElement('editor', 'modal', get_string('modaltext', 'block_carousel'), ['maxfiles' => 0]);
-        $mform->setType('modal', PARAM_RAW);
-
         $mform->addElement('filemanager', 'content',
                 get_string('slideimage', 'block_carousel'), null, block_carousel_file_options());
         $mform->setType('content', PARAM_FILE);
+        $mform->addRule('content', get_string('required'), 'required');
 
-        $mform->addElement('advcheckbox', 'timed', get_string('timedrelease', 'block_carousel'));
-        $mform->setType('timed', PARAM_BOOL);
+        $mform->addElement('editor', 'modal', get_string('modaltext', 'block_carousel'), ['maxfiles' => 0]);
+        $mform->setType('modal', PARAM_RAW);
 
         $mform->addElement('date_time_selector', 'timedstart', get_string('from'), [
             'startyear' => 2020,
             'stopyear' => 2030,
+            'optional' => true,
         ]);
         $mform->setType('timedstart', PARAM_INT);
 
         $mform->addElement('date_time_selector', 'timedend', get_string('to'), [
             'startyear' => 2020,
             'stopyear' => 2030,
+            'optional' => true,
         ]);
 
         $this->add_action_buttons();
@@ -73,7 +73,7 @@ class add_slide extends \moodleform {
     public function validation($data, $files) {
         // Ensure that the active period is valid if selected.
         $errors = parent::validation($data, $files);
-        if ($data['timed']) {
+        if (!empty($data['timedstart']) && !empty($data['timedend'])) {
             if ($data['timedstart'] >= $data['timedend']) {
                 $errors['timedstart'] = get_string('timeperioderror', 'block_carousel');
             }
