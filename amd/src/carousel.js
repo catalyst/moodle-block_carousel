@@ -52,17 +52,20 @@ define(['jquery', 'core/modal_factory', 'block_carousel/slick'], function($, Mod
         },
 
         videocontrol: function(blockid, slideid) {
-            var slide = document.querySelector('#carousel' + blockid);
-            slide.addEventListener('afterChange', function() {
+            var videocontrol = function() {
                 var video = document.querySelector('#id_slidevideo' + slideid);
-                if (slide.attr('tabindex') ==  0) {
+                var slidecontainer = $('#id_slidecontainer' + slideid);
+                if (slidecontainer.attr('aria-hidden') === 'false') {
                     // This is the active slide. Unpause the video with this slideID.
                     video.play();
                 } else {
                     // Non active slide. Pause it.
                     video.pause();
                 }
-            });
+            };
+            var carousel = $('#carousel' + blockid);
+            carousel.on('afterChange', videocontrol);
+            carousel.on('init', videocontrol);
         }
     };
 });

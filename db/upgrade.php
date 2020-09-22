@@ -46,6 +46,9 @@ function xmldb_block_carousel_upgrade($oldversion) {
         $table->add_field('modalcontent', XMLDB_TYPE_TEXT, null, null, null, null, null);
         $table->add_field('newtab', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
         $table->add_field('disabled', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('timedstart', XMLDB_TYPE_INTEGER, '15', null, null, null, null);
+        $table->add_field('timedend', XMLDB_TYPE_INTEGER, '15', null, null, null, null);
+        $table->add_field('timed', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
 
         // Adding keys to table block_carousel.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);

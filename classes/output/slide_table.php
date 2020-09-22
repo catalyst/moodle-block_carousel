@@ -27,6 +27,7 @@ class slide_table extends \flexible_table implements \renderable {
                 'url',
                 'content',
                 'interactions',
+                'timed',
                 'actions',
         ));
         $this->define_headers(array(
@@ -35,6 +36,7 @@ class slide_table extends \flexible_table implements \renderable {
                 get_string('link', 'block_carousel'),
                 get_string('content'),
                 get_string('interactions', 'block_carousel'),
+                get_string('timedrelease', 'block_carousel'),
                 get_string('actions'),
             )
         );
@@ -55,14 +57,17 @@ class slide_table extends \flexible_table implements \renderable {
         $slidenum = 1;
         foreach ($currorder as $id) {
             $data = [];
-            $data['title'] = $rows[$id]->title;
-            $data['text'] = $rows[$id]->text;
+            $data['title'] = !empty($rows[$id]->title) ? $rows[$id]->title : get_string('none');
+            $data['text'] = !empty($rows[$id]->text) ? $rows[$id]->text : get_string('none');
             if ($rows[$id]->modalcontent) {
                 $data['url'] = get_string('modal', 'block_carousel');
+            } else if (!empty($rows[$id]->url)) {
+                $data['url'] = \html_writer::link($rows[$id]->url, $rows[$id]->url);
             } else {
-                $data['url'] = $rows[$id]->url;
+                $data['url'] = get_string('none');
             }
             $data['interactions'] = $rows[$id]->interactions;
+            $data['timed'] = $rows[$id]->timed ? get_string('yes') : get_string('no');
 
             // Get file preview.
             $storage = get_file_storage();

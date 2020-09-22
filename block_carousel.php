@@ -53,6 +53,16 @@ class block_carousel extends block_base {
     public function hide_header() {
         return true;
     }
+
+    /**
+     * Allow global config
+     *
+     * @return boolean
+     */
+    function has_config() {
+        return true;
+    }
+
     /**
      * Unless we are in editing mode, remove all visual block chrome
      *
@@ -83,7 +93,7 @@ class block_carousel extends block_base {
      * The html for the carousel
      */
     public function get_content() {
-        global $CFG, $DB, $PAGE;
+        global $CFG, $PAGE;
 
         require_once($CFG->libdir . '/filelib.php');
 
@@ -101,9 +111,6 @@ class block_carousel extends block_base {
             $this->content->text = '';
             return $this->content;
         }
-
-        $fs = get_file_storage();
-
         $height = $config->height;
 
         // Default value.
@@ -123,12 +130,19 @@ class block_carousel extends block_base {
                 continue;
             }
 
+            // Check release timing.
+            if ($data->timed) {
+                if (time() < $data->timedstart || time() > $data->timedend) {
+                    continue;
+                }
+            }
+
             $title = $data->title;
             $text = $data->text;
             $url = $data->url;
-            $modalcontent = $data->modalcontent;
+            $modalcontent = format_text($data->modalcontent);
             $contenttype = $data->contenttype;
-            $html .= html_writer::start_tag('div'); // This will be modified by slick
+            $html .= html_writer::start_tag('div', ['id' => 'id_slidecontainer' . $slideid]); // This will be modified by slick
 
             $paddingbottom = $height;
             preg_match('!\d+!', $height, $matches);
@@ -151,7 +165,7 @@ class block_carousel extends block_base {
                     $PAGE->requires->js_call_amd('block_carousel/carousel', 'modal', [$slideid, $modalcontent]);
                 } else if ($url) {
                     $attr['href'] = $url;
-                    if ($slide->newtab) {
+                    if ($data->newtab) {
                         $attr['target'] = '_blank';
                     }
                 }
@@ -159,10 +173,6 @@ class block_carousel extends block_base {
                 $html .= html_writer::start_tag('a', $attr);
                 // Add interaction event listener on the a tag.
                 $PAGE->requires->js_call_amd('block_carousel/interaction', 'init', [$slideid]);
-                // If this is a video, setup the control JS.
-                if ($contenttype === 'video') {
-                    $PAGE->requires->js_call_amd('block_carousel/carousel', 'videocontrol', [$blockid, $slideid]);
-                }
                 $html .= html_writer::start_tag('object');
             }
             $show = ($numslides == 0) ? 'block' : 'none';
@@ -190,6 +200,9 @@ class block_carousel extends block_base {
                 ]);
                 $html .= html_writer::tag('source', null, ['src' => $data->link]);
                 $html .= html_writer::end_tag('video');
+
+                // Setup the video control JS.
+                $PAGE->requires->js_call_amd('block_carousel/carousel', 'videocontrol', [$blockid, $slideid]);
             }
 
             if ($title) {

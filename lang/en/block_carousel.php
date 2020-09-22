@@ -40,6 +40,8 @@ $string['slidetitle'] = 'Title';
 $string['slidetext'] = 'Text';
 $string['slideurl'] = 'URL';
 $string['pluginname'] = 'Carousel';
+$string['timedrelease'] = 'Timed release';
+$string['timeperioderror'] = 'Start time must be less than end time.';
 
 // Settings.
 $string['settings:ffprobe:pathtoffprobe'] = 'FFProbe binary path';

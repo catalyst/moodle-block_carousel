@@ -53,10 +53,32 @@ class add_slide extends \moodleform {
                 get_string('slideimage', 'block_carousel'), null, block_carousel_file_options());
         $mform->setType('content', PARAM_FILE);
 
+        $mform->addElement('advcheckbox', 'timed', get_string('timedrelease', 'block_carousel'));
+        $mform->setType('timed', PARAM_BOOL);
+
+        $mform->addElement('date_time_selector', 'timedstart', get_string('from'), [
+            'startyear' => 2020,
+            'stopyear' => 2030,
+        ]);
+        $mform->setType('timedstart', PARAM_INT);
+
+        $mform->addElement('date_time_selector', 'timedend', get_string('to'), [
+            'startyear' => 2020,
+            'stopyear' => 2030,
+        ]);
+
         $this->add_action_buttons();
     }
 
     public function validation($data, $files) {
+        // Ensure that the active period is valid if selected.
+        $errors = parent::validation($data, $files);
+        if ($data['timed']) {
+            if ($data['timedstart'] >= $data['timedend']) {
+                $errors['timedstart'] = get_string('timeperioderror', 'block_carousel');
+            }
+        }
 
+        return $errors;
     }
 }

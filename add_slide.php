@@ -130,7 +130,11 @@ if ($form->is_cancelled()) {
     $record->interactions = 0;
     $record->newtab = $fromform->newtab;
     $record->disabled = 0;
-    $record->modalcontent = format_text($fromform->modal['text'], $fromform->modal['format']);
+    $record->modalcontent = $fromform->modal['text'];
+    $record->timed = $fromform->timed;
+    $record->timedstart = $fromform->timedstart;
+    $record->timedend = $fromform->timedend;
+
     $record->contenttype = 'image';
     if ($action !== 'edit') {
         $id = $DB->insert_record('block_carousel', $record, true);
@@ -140,6 +144,9 @@ if ($form->is_cancelled()) {
         $record->id = $id;
         $DB->update_record('block_carousel', $record);
         $recordid = $id;
+
+        // Invalidate cache for this record.
+        cache_helper::invalidate_by_definition('block_carousel', 'slides', [], [(string) $recordid]);
     }
     file_save_draft_area_files($fromform->content, $context->id, 'block_carousel', 'content', $recordid);
 
