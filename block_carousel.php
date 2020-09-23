@@ -53,6 +53,16 @@ class block_carousel extends block_base {
     public function hide_header() {
         return true;
     }
+
+    /**
+     * Allow global config
+     *
+     * @return boolean
+     */
+    public function has_config() {
+        return true;
+    }
+
     /**
      * Unless we are in editing mode, remove all visual block chrome
      *
@@ -97,13 +107,10 @@ class block_carousel extends block_base {
         $config = $this->config;
         $this->content = new stdClass;
 
-        if (empty($config)) {
+        if (empty($config) || empty($config->order)) {
             $this->content->text = '';
             return $this->content;
         }
-
-        $fs = get_file_storage();
-
         $height = $config->height;
 
         // Default value.
@@ -111,57 +118,93 @@ class block_carousel extends block_base {
             $height = "50%";
         }
 
-        foreach ($config->image as $c => $imageid) {
-            if (empty($imageid)) {
-                // Don't show slides without an image.
+        $order = explode(',', $config->order);
+
+        $cache = cache::make('block_carousel', 'slides');
+        $data = $cache->get_many($order);
+
+        $numslides = count($order);
+        foreach ($data as $slideid => $data) {
+            $data = (object) $data;
+            if ($data->disabled) {
                 continue;
             }
-            $title = $config->title[$c];
-            $text = $config->text[$c];
-            $url = $config->url[$c];
-            $html .= html_writer::start_tag('div'); // This will be modified by slick.
-            $files   = $fs->get_area_files($this->context->id, 'block_carousel', 'slide', $c);
 
-            $image = '';
-            foreach ($files as $file) {
+            // Check release timing.
+            if ((!empty($data->timedstart) && time() < $data->timedstart) ||
+                (!empty($data->timedstart) && time() > $data->timedend)) {
+                continue;
+            }
 
-                if ($file->get_filesize() == 0) {
-                    continue; // TODO fix the broken dud records.
-                }
+            $title = $data->title;
+            $text = $data->text;
+            $url = $data->url;
+            $modalcontent = format_text($data->modalcontent);
+            $contenttype = $data->contenttype;
+            $html .= html_writer::start_tag('div', ['id' => 'id_slidecontainer' . $slideid]); // This will be modified by slick.
 
-                $image = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(),
-                        $file->get_filearea(), $file->get_itemid(), $file->get_filepath(), $file->get_filename());
-
-                $imageinfo = $file->get_imageinfo();
-                if (isset($imageinfo["width"]) && isset($imageinfo["height"])) {
-                    preg_match('!\d+!', $height, $matches);
-                    if (isset($matches[0])) {
-                        $heightvalue = $matches[0];
-                        $unit = trim(str_replace($heightvalue, '', $height));
-                        $ratio = ($imageinfo["width"] / $imageinfo["height"]);
-                        $paddingbottom = (round((1 / $ratio), 4) * 100) . '%';
-                        $width = (round(($ratio * $heightvalue), 2)) . $unit;
-                    }
-                } else {
-                    $paddingbottom = $height;
-                }
+            $paddingbottom = $height;
+            preg_match('!\d+!', $height, $matches);
+            if (isset($matches[0])) {
+                $heightvalue = $matches[0];
+                $unit = trim(str_replace($heightvalue, '', $height));
+                $ratio = ($data->widthres / $data->heightres);
+                $paddingbottom = (round((1 / $ratio), 4) * 100) . '%';
+                $width = (round(($ratio * $heightvalue), 2)) . $unit;
             }
 
             // Wrapping the slide in an object is a neat trick allowing the slide to be a link
             // and for the text within it to also have sub-links.
-            if ($url) {
-                $html .= html_writer::start_tag('a', array('href' => $url, 'class' => 'slidelink'));
+            if ($modalcontent || $url) {
+                $attr = [
+                    'class' => 'slidelink',
+                    'id' => 'id_slide' . $slideid
+                ];
+                if ($modalcontent) {
+                    $this->page->requires->js_call_amd('block_carousel/carousel', 'modal', [$slideid, $modalcontent, $title]);
+                    $attr['style'] = 'cursor: pointer;';
+                } else if ($url) {
+                    $attr['href'] = $url;
+                    if ($data->newtab) {
+                        $attr['target'] = '_blank';
+                    }
+                }
+
+                $html .= html_writer::start_tag('a', $attr);
+                // Add interaction event listener on the a tag.
+                $this->page->requires->js_call_amd('block_carousel/carousel', 'interaction', [$slideid]);
                 $html .= html_writer::start_tag('object');
             }
-            $show = ($c == 0) ? 'block' : 'none';
+            $show = ($numslides == 0) ? 'block' : 'none';
 
             if (!empty($width)) {
-                $html .= html_writer::start_tag('div', array('style' => "max-width: $width; margin: auto;"));
+                $html .= html_writer::start_tag('div', array('style' => "max-width: {$width}; margin: auto;"));
+            }
+
+            $style = "padding-bottom: $paddingbottom; display: $show;";
+            if ($contenttype === 'image') {
+                $style .= " background-image: url($data->link);";
             }
             $html .= html_writer::start_tag('div', array(
                 'class' => 'slidewrap',
-                'style' => "padding-bottom: $paddingbottom; background-image: url($image); display: $show;"
+                'style' => $style,
             ));
+            if ($contenttype === 'video') {
+                // Setup the video tag.
+                $html .= html_writer::start_tag('video', [
+                    'id' => 'id_slidevideo' . $slideid,
+                    'style' => "max-width: 100%",
+                    'muted' => 'muted',
+                    'autoplay' => 'autoplay',
+                    'loop' => 'loop',
+                ]);
+                $html .= html_writer::tag('source', null, ['src' => $data->link]);
+                $html .= html_writer::end_tag('video');
+
+                // Setup the video control JS.
+                $this->page->requires->js_call_amd('block_carousel/carousel', 'videocontrol', [$blockid, $slideid]);
+            }
+
             if ($title) {
                 $html .= html_writer::tag('h4', $title, array('class' => 'title'));
             }
@@ -172,15 +215,15 @@ class block_carousel extends block_base {
             if (!empty($width)) {
                 $html .= html_writer::end_tag('div');
             }
-            if ($url) {
+            if ($modalcontent || $url) {
                 $html .= html_writer::end_tag('object');
                 $html .= html_writer::end_tag('a');
             }
             $html .= html_writer::end_tag('div');
         }
 
-        $this->page->requires->css('/blocks/carousel/extlib/slick-1.5.9/slick/slick.css');
-        $this->page->requires->css('/blocks/carousel/extlib/slick-1.5.9/slick/slick-theme.css');
+        $this->page->requires->css('/blocks/carousel/extlib/slick-1.8.1/slick/slick.css');
+        $this->page->requires->css('/blocks/carousel/extlib/slick-1.8.1/slick/slick-theme.css');
         $this->page->requires->js_call_amd('block_carousel/carousel', 'init', array($blockid, $config->playspeed * 1000));
 
         $html .= html_writer::end_tag('div');
@@ -204,32 +247,13 @@ class block_carousel extends block_base {
      * @param boolean $nolongerused boolean Not used
      */
     public function instance_config_save($data, $nolongerused = false) {
-        $config = clone($data);
-        $image = [];
-        $title = [];
-        $text = [];
-        $url = [];
-
-        // Remove slides where there are no image.
-        for ($c = 0; $c < count($data->image); $c++) {
-            $files = file_get_all_files_in_draftarea($data->image[$c]);
-            if (!empty($files)) {
-                $image[] = $data->image[$c];
-                $title[] = $data->title[$c];
-                $text[] = $data->text[$c];
-                $url[] = $data->url[$c];
-            }
+        $config = new stdClass();
+        $config->height = $data->height;
+        $config->playspeed = $data->playspeed;
+        // Saving needs to maintain order.
+        if (!empty($this->config) && !empty($this->config->order)) {
+            $config->order = $this->config->order;
         }
-        // Update config values.
-        $config->image = $image;
-        $config->title = $title;
-        $config->text = $text;
-        $config->url = $url;
-
-        for ($c = 0; $c < count($config->image); $c++) {
-            file_save_draft_area_files($config->image[$c], $this->context->id, 'block_carousel', 'slide', $c);
-        }
-
         parent::instance_config_save($config, $nolongerused);
     }
 
@@ -242,4 +266,3 @@ class block_carousel extends block_base {
         return true;
     }
 }
-

@@ -4,10 +4,17 @@ https://moodle.org/plugins/block_carousel
 
 ![Screen shot](/pix/screenshot.png?raw=true)
 
+* [Branches](#branches)
 * [What is this?](#what-is-this)
 * [Installation and configuration](#installation-and-configuration)
 * [Issues and feedback](#issues-and-feedback)
 * [Credits and Thanks](#credits-and-thanks)
+
+Branches
+--------
+
+For Moodle 3.6 Onwards, use the master branch. For Moodle 3.5 and older use the MOODLE_35_STABLE branch.
+
 
 What is this?
 -------------
@@ -16,6 +23,7 @@ An easy to use carousel block:
 
 * responsive
 * touch and mouse friendly
+* video support
 
 
 Installation and Configuration
@@ -33,7 +41,11 @@ Installation and Configuration
 
 2. Then run the Moodle upgrade
 
-3. Now add the block to a page, then configure it add the slides
+3. For use of videos in the carousel, install the [FFprobe tool](https://ffmpeg.org/download.html).
+
+4. Visit Site Administration -> Plugins -> Blocks -> Carousel and configure the path to FFprobe.
+
+3. Now add the block to a page, then configure it and add the slides
 
 
 Contributing
@@ -78,4 +90,3 @@ This plugin was developed by Catalyst IT Australia:
 https://www.catalyst-au.net/
 
 <img alt="Catalyst IT" src="https://cdn.rawgit.com/catalyst/moodle-auth_saml2/master/pix/catalyst-logo.svg" width="400">
-

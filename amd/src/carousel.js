@@ -20,7 +20,7 @@
  * @copyright 2016 Brendan Heywood (brendan@catalyst-au.net)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-define(['jquery', 'block_carousel/slick'], function($) {
+define(['jquery', 'core/modal_factory', 'core/ajax', 'block_carousel/slick'], function($, ModalFactory, Ajax) {
     return {
         init: function(blockid, playspeed) {
             $('#carousel' + blockid + ' .slidewrap').show();
@@ -32,6 +32,52 @@ define(['jquery', 'block_carousel/slick'], function($) {
                 adaptiveHeight: true,
                 autoplay: true,
                 autoplaySpeed: playspeed
+            });
+        },
+
+        modal: function(rowid, modalContent, modalTitle) {
+            var slide = document.querySelector('#id_slide' + rowid);
+            slide.addEventListener('click', function(){
+                ModalFactory.create(
+                    {
+                        type: ModalFactory.types.CANCEL,
+                        title: modalTitle,
+                        body: modalContent
+                    }
+                ).then($.proxy(function(modal) {
+                    modal.setLarge();
+                    modal.show();
+                }));
+            });
+        },
+
+        videocontrol: function(blockid, slideid) {
+            var videocontrol = function() {
+                var video = document.querySelector('#id_slidevideo' + slideid);
+                var slideparent = $('#id_slidecontainer' + slideid).parents('.slick-slide');
+                if (slideparent.attr('aria-hidden') === 'false') {
+                    // This is the active slide. Unpause the video with this slideID.
+                    video.play();
+                } else {
+                    // Non active slide. Pause it.
+                    video.pause();
+                }
+            };
+            var carousel = $('#carousel' + blockid);
+            carousel.on('afterChange', videocontrol);
+            carousel.on('init', videocontrol);
+        },
+
+        interaction: function(slideid) {
+            var slide = document.querySelector('#id_slide' + slideid);
+            slide.addEventListener('click', function(){
+                var request = {
+                    methodname: 'block_carousel_record_interaction',
+                    args: {
+                        rowid: slideid
+                    }
+                };
+                Ajax.call([request])[0].fail();
             });
         }
     };

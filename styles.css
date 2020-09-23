@@ -10,6 +10,9 @@
 }
 
 .block_carousel .slidewrap .title {
+    position: absolute;
+    left: 2%;
+    top: 2%;
     padding: 1em;
     margin: 0;
     text-shadow: 0px 2px 6px #000;

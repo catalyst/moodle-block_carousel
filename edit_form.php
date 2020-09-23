@@ -37,6 +37,7 @@ class block_carousel_edit_form extends block_edit_form {
      * @param object $mform the form being built.
      */
     protected function specific_definition($mform) {
+        global $SESSION;
 
         $mform->addElement('header', 'configheader', get_string('blocksettings', 'block_carousel'));
 
@@ -51,43 +52,13 @@ class block_carousel_edit_form extends block_edit_form {
         $mform->addElement('header', 'configheaderslides', get_string('slideheader', 'block_carousel'));
         $mform->setExpanded('configheaderslides');
 
-        $options = array();
-        $slidegroup = array();
-
-        $slidegroup[] = $mform->createElement('text', 'config_title',
-                get_string('slidetitle', 'block_carousel'));
-        $options['config_title']['type'] = PARAM_TEXT;
-
-        $slidegroup[] = $mform->createElement('textarea', 'config_text',
-                get_string('slidetext', 'block_carousel'));
-        $options['config_text']['type'] = PARAM_TEXT;
-
-        $slidegroup[] = $mform->createElement('text', 'config_url',
-                get_string('slideurl', 'block_carousel'));
-        $options['config_url']['type'] = PARAM_URL;
-
-        $slidegroup[] = $mform->createElement('filemanager', 'config_image',
-                get_string('slideimage', 'block_carousel'), null, block_carousel_file_options());
-        $options['config_image']['type'] = PARAM_FILE;
-
-        $slidegroup[] = $mform->createElement('html', '<hr>');
-
-        $repeatcount = empty($this->block->config->image) ? 3 : count($this->block->config->image);
-        $this->repeat_elements($slidegroup, $repeatcount, $options, 'slides', 'add_slides', 1,
-                get_string('addslide', 'block_carousel'), true);
-
-    }
-
-    public function set_data($defaults) {
-        if (!empty($this->block->config) && is_object($this->block->config)) {
-            for ($c = 0; $c < count($this->block->config->image); $c++) {
-                $draftideditor = file_get_submitted_draft_itemid("image[$c]");
-                file_prepare_draft_area($draftideditor, $this->block->context->id, 'block_carousel', 'slide', $c,
-                    block_carousel_file_options());
-                $this->block->config->image[$c] = $draftideditor;
-            }
-        }
-
-        parent::set_data($defaults);
+        // Slides table.
+        $blockid = $this->block->instance->id;
+        // Setup the return url for slide actions.
+        $editurl = "carousel_{$blockid}_editurl";
+        $SESSION->$editurl = $this->page->url;
+        $table = new \block_carousel\output\slide_table('carousel_slides');
+        $html = $table->out($blockid);
+        $mform->addElement('html', $html);
     }
 }

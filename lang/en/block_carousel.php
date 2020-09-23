@@ -28,11 +28,24 @@ $string['addslide'] = 'Add another slide';
 $string['blocksettings'] = 'Carousel settings';
 $string['configheight'] = 'Height (eg 100px or 50%)';
 $string['configplayspeed'] = 'Play speed (in seconds)';
+$string['confirmdelete'] = 'Are you sure you wish to delete this slide?';
+$string['interactions'] = 'Clicks';
+$string['link'] = 'On click';
+$string['modal'] = 'Modal';
+$string['modaltext'] = 'Modal content';
+$string['openinnewtab'] = 'Open in new tab';
 $string['slideheader'] = 'Slides';
 $string['slideimage'] = 'Image';
 $string['slidetitle'] = 'Title';
 $string['slidetext'] = 'Text';
 $string['slideurl'] = 'URL';
 $string['pluginname'] = 'Carousel';
+$string['timedrelease'] = 'Timed release';
+$string['timeperioderror'] = 'Start time must be less than end time.';
+
+// Settings.
+$string['settings:ffprobe:pathtoffprobe'] = 'FFProbe binary path';
+$string['settings:ffprobe:pathtoffprobe_desc'] = 'The path to the FFProbe binary on the server running Moodle.';
+
 // Privacy.
 $string['privacy:metadata'] = 'This plugin does not store personal data.';
