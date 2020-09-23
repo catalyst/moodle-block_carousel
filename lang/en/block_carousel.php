@@ -28,6 +28,7 @@ $string['addslide'] = 'Add another slide';
 $string['blocksettings'] = 'Carousel settings';
 $string['configheight'] = 'Height (eg 100px or 50%)';
 $string['configplayspeed'] = 'Play speed (in seconds)';
+$string['cachedef_slides'] = 'Caching carousel block slides';
 $string['confirmdelete'] = 'Are you sure you wish to delete this slide?';
 $string['interactions'] = 'Clicks';
 $string['link'] = 'On click';
