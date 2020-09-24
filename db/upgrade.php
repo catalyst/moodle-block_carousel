@@ -64,5 +64,21 @@ function xmldb_block_carousel_upgrade($oldversion) {
         upgrade_block_savepoint(true, 2020092200, 'carousel');
     }
 
+    if ($oldversion < 2020092400) {
+
+        // Define field courseid to be added to block_carousel.
+        $table = new xmldb_table('block_carousel');
+        $field = new xmldb_field('courseid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'timedend');
+
+        // Conditionally launch add field courseid.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Carousel savepoint reached.
+        upgrade_block_savepoint(true, 2020092400, 'carousel');
+    }
+
+
     return true;
 }

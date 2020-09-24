@@ -32,6 +32,14 @@ class add_slide extends \moodleform {
     public function definition() {
         $mform = $this->_form;
 
+        $mform->addElement('text', 'url', get_string('slideurl', 'block_carousel'), ['size' => 40]);
+        $mform->setType('url', PARAM_URL);
+        $mform->addHelpButton('url', 'slideurl', 'block_carousel');
+
+        $mform->addElement('advcheckbox', 'newtab', get_string('openinnewtab', 'block_carousel'));
+        $mform->setType('newtab', PARAM_BOOL);
+        $mform->setDefault('newtab', 1);
+
         $mform->addElement('text', 'title', get_string('slidetitle', 'block_carousel'), ['size' => 40]);
         $mform->setType('title', PARAM_TEXT);
 
@@ -39,17 +47,9 @@ class add_slide extends \moodleform {
         // Raw. This is formatted before being stored.
         $mform->setType('text', PARAM_RAW);
 
-        $mform->addElement('text', 'url', get_string('slideurl', 'block_carousel'), ['size' => 40]);
-        $mform->setType('url', PARAM_URL);
-
-        $mform->addElement('advcheckbox', 'newtab', get_string('openinnewtab', 'block_carousel'));
-        $mform->setType('newtab', PARAM_BOOL);
-        $mform->setDefault('newtab', 1);
-
         $mform->addElement('filemanager', 'content',
                 get_string('slideimage', 'block_carousel'), null, block_carousel_file_options());
         $mform->setType('content', PARAM_FILE);
-        $mform->addRule('content', get_string('required'), 'required');
 
         $mform->addElement('editor', 'modal', get_string('modaltext', 'block_carousel'), ['maxfiles' => 0]);
         $mform->setType('modal', PARAM_RAW);

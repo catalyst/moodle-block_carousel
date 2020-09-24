@@ -148,7 +148,12 @@ class block_carousel extends block_base {
             if (isset($matches[0])) {
                 $heightvalue = $matches[0];
                 $unit = trim(str_replace($heightvalue, '', $height));
-                $ratio = ($data->widthres / $data->heightres);
+
+                if ($data->heightres === 0) {
+                    $ratio = 1;
+                } else {
+                    $ratio = ($data->widthres / $data->heightres);
+                }
                 $paddingbottom = (round((1 / $ratio), 4) * 100) . '%';
                 $width = (round(($ratio * $heightvalue), 2)) . $unit;
             }

@@ -59,9 +59,21 @@ class slide_cache implements \cache_data_source {
 
         $data = (array) $record;
 
+        // If courseid is set, generate data based on course info.
+        $iscourse = false;
+        if (!empty($data['courseid'])) {
+            $iscourse = true;
+            $course = get_course($data['courseid']);
+            $data['title'] = $course->fullname;
+            $data['text'] = $course->summary;
+        }
+
         // Find the relevant content for the slide.
         $context = \context_block::instance($record->blockid);
+        $selectedfile = null;
         $storage = get_file_storage();
+
+        // Try to find any files in the direct file area first.
         $files = $storage->get_area_files($context->id, 'block_carousel', 'content', $key);
         foreach ($files as $file) {
             if (!$file->is_directory()) {
@@ -69,18 +81,43 @@ class slide_cache implements \cache_data_source {
             }
         }
 
-        $data['link'] = \moodle_url::make_pluginfile_url(
-            $selectedfile->get_contextid(),
-            $selectedfile->get_component(),
-            $selectedfile->get_filearea(),
-            $selectedfile->get_itemid(),
-            $selectedfile->get_filepath(),
-            $selectedfile->get_filename()
-        );
+        // There was no image supplied, try to find course image.
+        if (empty($selectedfile) && $iscourse) {
+            $context = \context_course::instance($data['courseid']);
+            $files = $storage->get_area_files(
+                $context->id,
+                'course',
+                'overviewfiles'
+            );
+            foreach ($files as $file) {
+                if ($file->is_valid_image()) {
+                    $selectedfile = $file;
+                    break;
+                }
+            }
+        }
+
+        // Now we have the correct file.
+        if (!empty($selectedfile)) {
+            $itemid = empty($selectedfile->get_itemid()) ? null : $selectedfile->get_itemid();
+            $data['link'] = \moodle_url::make_pluginfile_url(
+                $selectedfile->get_contextid(),
+                $selectedfile->get_component(),
+                $selectedfile->get_filearea(),
+                $itemid,
+                $selectedfile->get_filepath(),
+                $selectedfile->get_filename()
+            );
+        } else {
+            $data['link'] = '';
+        }
 
         // Cache information for layout.
-        if ($record->contenttype === 'image') {
-            $imageinfo = $file->get_imageinfo();
+        if (empty($selectedfile)) {
+            $data['heightres'] = 0;
+            $data['widthres'] = 0;
+        } else if ($record->contenttype === 'image') {
+            $imageinfo = $selectedfile->get_imageinfo();
             $data['heightres'] = $imageinfo['height'];
             $data['widthres'] = $imageinfo['width'];
         } else {
@@ -106,6 +143,9 @@ class slide_cache implements \cache_data_source {
                     }
                 }
             }
+
+            // Now unset the path.
+            unset($path);
         }
 
         return $data;

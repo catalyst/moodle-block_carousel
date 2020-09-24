@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/carousel/db" VERSION="20200922" COMMENT="XMLDB file for Moodle blocks/carousel"
+<XMLDB PATH="blocks/carousel/db" VERSION="20200924" COMMENT="XMLDB file for Moodle blocks/carousel"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -18,6 +18,7 @@
         <FIELD NAME="disabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="timedstart" TYPE="int" LENGTH="15" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="timedend" TYPE="int" LENGTH="15" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

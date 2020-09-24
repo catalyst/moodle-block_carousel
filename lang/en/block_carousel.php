@@ -40,6 +40,7 @@ $string['slideimage'] = 'Image';
 $string['slidetitle'] = 'Title';
 $string['slidetext'] = 'Text';
 $string['slideurl'] = 'URL';
+$string['slideurl_help'] = 'Enter URL to visit on click. If you enter a course URL, the slide will autopopulate with data from the course. This can be overridden by entering data directly into the form. E.g. course/view.php?id=2';
 $string['pluginname'] = 'Carousel';
 $string['timedrelease'] = 'Timed release';
 $string['timeperioderror'] = 'Start time must be less than end time.';
