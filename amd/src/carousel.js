@@ -22,16 +22,31 @@
  */
 define(['jquery', 'core/modal_factory', 'core/ajax', 'block_carousel/slick'], function($, ModalFactory, Ajax) {
     return {
-        init: function(blockid, playspeed) {
+        init: function(blockid, numslides, autoplay, playspeed) {
             $('#carousel' + blockid + ' .slidewrap').show();
-            $('#carousel' + blockid).slick({
+            var carousel = $('#carousel' + blockid);
+            carousel.slick({
                 dots: true,
                 infinite: true,
                 speed: 300,
-                slidesToShow: 1,
+                slidesToShow: numslides,
                 adaptiveHeight: true,
-                autoplay: true,
-                autoplaySpeed: playspeed
+                autoplay: autoplay,
+                autoplaySpeed: playspeed,
+                focus
+            });
+
+            // This is a special case for when carousel is embedded in another block.
+            // When the parent container has its attributes changed, we need to resize.
+            // This causes slick to natively resize itself.
+            const observer = new MutationObserver(function() {
+                $(window).trigger('resize');
+            });
+            var blockcontainer = carousel.parents(".block_carousel").parent();
+            observer.observe(blockcontainer.get('0'), {
+                attributes: true,
+                childList: false,
+                subtree: false
             });
         },
 

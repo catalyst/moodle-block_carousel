@@ -88,6 +88,8 @@ class block_carousel_upgrade_helper {
                 unset($configdata->url);
                 unset($configdata->image);
                 $configdata->order = implode(',', $ids);
+                $configdata->autoplay = 1;
+                $configdata->slides = 1;
 
                 $encoded = base64_encode(serialize($configdata));
                 $DB->set_field('block_instances', 'configdata', $encoded, ['id' => $carousel->id]);

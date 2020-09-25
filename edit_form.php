@@ -41,13 +41,26 @@ class block_carousel_edit_form extends block_edit_form {
 
         $mform->addElement('header', 'configheader', get_string('blocksettings', 'block_carousel'));
 
+        $mform->addElement('text', 'config_blockname', get_string('name'));
+        $mform->setType('config_blockname', PARAM_TEXT);
+        $mform->setDefault('config_blockname', get_string('pluginname', 'block_carousel'));
+
         $mform->addElement('text', 'config_height', get_string('configheight', 'block_carousel'));
         $mform->setType('config_height', PARAM_TEXT);
         $mform->setDefault('config_height', '50%');
 
+        $mform->addElement('text', 'config_slides', get_string('configslides', 'block_carousel'));
+        $mform->setType('config_slides', PARAM_INT);
+        $mform->setDefault('config_slides', 1);
+
+        $mform->addElement('advcheckbox', 'config_autoplay', get_string('configautoplay', 'block_carousel'));
+        $mform->setType('config_autoplay', PARAM_BOOL);
+        $mform->setDefault('config_autoplay', 1);
+
         $mform->addElement('text', 'config_playspeed', get_string('configplayspeed', 'block_carousel'));
         $mform->setType('config_playspeed', PARAM_FLOAT);
         $mform->setDefault('config_playspeed', '4');
+        $mform->disabledIf('config_playspeed', 'config_autoplay');
 
         $mform->addElement('header', 'configheaderslides', get_string('slideheader', 'block_carousel'));
         $mform->setExpanded('configheaderslides');

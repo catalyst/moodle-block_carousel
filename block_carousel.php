@@ -111,12 +111,10 @@ class block_carousel extends block_base {
             $this->content->text = '';
             return $this->content;
         }
-        $height = $config->height;
-
-        // Default value.
-        if (empty($height)) {
-            $height = "50%";
-        }
+        $height = $config->height ?? '50%';
+        $autoplay = $config->autoplay ?? 1;
+        $slides = $config->slides ?? 1;
+        $playspeed = $config->playspeed ?? 4;
 
         $order = explode(',', $config->order);
 
@@ -229,7 +227,12 @@ class block_carousel extends block_base {
 
         $this->page->requires->css('/blocks/carousel/extlib/slick-1.8.1/slick/slick.css');
         $this->page->requires->css('/blocks/carousel/extlib/slick-1.8.1/slick/slick-theme.css');
-        $this->page->requires->js_call_amd('block_carousel/carousel', 'init', array($blockid, $config->playspeed * 1000));
+        $this->page->requires->js_call_amd('block_carousel/carousel', 'init', [
+            $blockid,
+            $slides,
+            (bool) $autoplay,
+            $playspeed * 1000
+        ]);
 
         $html .= html_writer::end_tag('div');
         $this->content->text = $html;
@@ -255,6 +258,9 @@ class block_carousel extends block_base {
         $config = new stdClass();
         $config->height = $data->height;
         $config->playspeed = $data->playspeed;
+        $config->autoplay = $data->autoplay;
+        $config->slides = $data->slides;
+        $config->blockname = $data->blockname;
         // Saving needs to maintain order.
         if (!empty($this->config) && !empty($this->config->order)) {
             $config->order = $this->config->order;
@@ -269,5 +275,10 @@ class block_carousel extends block_base {
         $fs = get_file_storage();
         $fs->delete_area_files($this->context->id, 'block_carousel');
         return true;
+    }
+
+    public function specialization() {
+        $name = $this->config->blockname ?? get_string('pluginname', 'block_carousel');
+        $this->title = $name;
     }
 }

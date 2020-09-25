@@ -40,7 +40,7 @@ require_capability('moodle/block:edit', $context);
 
 $editurl = "carousel_{$blockid}_editurl";
 $prevurl = $SESSION->$editurl;
-$prevurl->params(['sesskey' => sesskey(), 'bui_editid' => $blockid]);
+$prevurl->param('sesskey', sesskey());
 $storage = get_file_storage();
 
 // Form data.
