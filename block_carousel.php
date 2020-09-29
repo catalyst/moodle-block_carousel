@@ -209,10 +209,14 @@ class block_carousel extends block_base {
             }
 
             if ($title) {
-                $html .= html_writer::tag('h4', $title, array('class' => 'title'));
+                $class = 'title';
+                $class = $slides > 1 ? $class . ' multislide' : $class;
+                $html .= html_writer::tag('h4', $title, array('class' => $class));
             }
             if ($text) {
-                $html .= html_writer::tag('div', $text, array('class' => 'text'));
+                $class = 'text';
+                $class = $slides > 1 ? $class . ' multislide' : $class;
+                $html .= html_writer::tag('div', $text, array('class' => $class));
             }
             $html .= html_writer::end_tag('div');
             if (!empty($width)) {

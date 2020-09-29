@@ -37,17 +37,14 @@ define(['jquery', 'core/modal_factory', 'core/ajax', 'block_carousel/slick'], fu
             });
 
             // This is a special case for when carousel is embedded in another block.
-            // When the parent container has its attributes changed, we need to resize.
+            // When the carousel is resized, we need to resize.
             // This causes slick to natively resize itself.
-            const observer = new MutationObserver(function() {
+            const observer = new ResizeObserver(function() {
                 $(window).trigger('resize');
+                $(document).trigger('ready');
             });
-            var blockcontainer = carousel.parents(".block_carousel").parent();
-            observer.observe(blockcontainer.get('0'), {
-                attributes: true,
-                childList: false,
-                subtree: false
-            });
+
+            observer.observe(carousel.get('0'));
         },
 
         modal: function(rowid, modalContent, modalTitle) {

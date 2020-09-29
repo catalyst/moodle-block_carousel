@@ -144,8 +144,8 @@ class slide_cache implements \cache_data_source {
                 }
             }
 
-            // Now unset the path.
-            unset($path);
+            // Now unlink the path.
+            unlink($path);
         }
 
         return $data;
