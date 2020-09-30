@@ -3,7 +3,7 @@
 }
 .block_carousel .slidewrap {
     position: relative;
-    height: 0px;
+    height: 0;
     color: white;
     background-size: cover;
     background-position: 50% 50%;
@@ -17,6 +17,9 @@
     margin: 0;
     text-shadow: 0px 2px 6px #000;
 }
+.block_carousel .slidewrap .title.multislide {
+    padding: 5px 0 0 5px;
+}
 
 .block_carousel .slidewrap .text {
     position: absolute;
@@ -25,4 +28,11 @@
     bottom: 0;
     padding: 1em;
     background: rgba(0,0,0,.4);
+}
+.block_carousel .slidewrap .text.multislide {
+    padding: 0 0 0 5px;
+}
+
+.block_carousel .slick-slide {
+    padding: 0 !important;
 }

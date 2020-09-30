@@ -25,6 +25,8 @@
 
 namespace block_carousel\local;
 
+defined('MOODLE_INTERNAL') || die();
+
 class slide_manager {
 
     /**

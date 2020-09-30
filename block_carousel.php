@@ -111,12 +111,10 @@ class block_carousel extends block_base {
             $this->content->text = '';
             return $this->content;
         }
-        $height = $config->height;
-
-        // Default value.
-        if (empty($height)) {
-            $height = "50%";
-        }
+        $height = $config->height ?? '50%';
+        $autoplay = $config->autoplay ?? 1;
+        $slides = $config->slides ?? 1;
+        $playspeed = $config->playspeed ?? 4;
 
         $order = explode(',', $config->order);
 
@@ -148,7 +146,12 @@ class block_carousel extends block_base {
             if (isset($matches[0])) {
                 $heightvalue = $matches[0];
                 $unit = trim(str_replace($heightvalue, '', $height));
-                $ratio = ($data->widthres / $data->heightres);
+
+                if ($data->heightres === 0) {
+                    $ratio = 1;
+                } else {
+                    $ratio = ($data->widthres / $data->heightres);
+                }
                 $paddingbottom = (round((1 / $ratio), 4) * 100) . '%';
                 $width = (round(($ratio * $heightvalue), 2)) . $unit;
             }
@@ -206,10 +209,14 @@ class block_carousel extends block_base {
             }
 
             if ($title) {
-                $html .= html_writer::tag('h4', $title, array('class' => 'title'));
+                $class = 'title';
+                $class = $slides > 1 ? $class . ' multislide' : $class;
+                $html .= html_writer::tag('h4', $title, array('class' => $class));
             }
             if ($text) {
-                $html .= html_writer::tag('div', $text, array('class' => 'text'));
+                $class = 'text';
+                $class = $slides > 1 ? $class . ' multislide' : $class;
+                $html .= html_writer::tag('div', $text, array('class' => $class));
             }
             $html .= html_writer::end_tag('div');
             if (!empty($width)) {
@@ -224,7 +231,12 @@ class block_carousel extends block_base {
 
         $this->page->requires->css('/blocks/carousel/extlib/slick-1.8.1/slick/slick.css');
         $this->page->requires->css('/blocks/carousel/extlib/slick-1.8.1/slick/slick-theme.css');
-        $this->page->requires->js_call_amd('block_carousel/carousel', 'init', array($blockid, $config->playspeed * 1000));
+        $this->page->requires->js_call_amd('block_carousel/carousel', 'init', [
+            $blockid,
+            $slides,
+            (bool) $autoplay,
+            $playspeed * 1000
+        ]);
 
         $html .= html_writer::end_tag('div');
         $this->content->text = $html;
@@ -250,6 +262,9 @@ class block_carousel extends block_base {
         $config = new stdClass();
         $config->height = $data->height;
         $config->playspeed = $data->playspeed;
+        $config->autoplay = $data->autoplay;
+        $config->slides = $data->slides;
+        $config->blockname = $data->blockname;
         // Saving needs to maintain order.
         if (!empty($this->config) && !empty($this->config->order)) {
             $config->order = $this->config->order;
@@ -264,5 +279,10 @@ class block_carousel extends block_base {
         $fs = get_file_storage();
         $fs->delete_area_files($this->context->id, 'block_carousel');
         return true;
+    }
+
+    public function specialization() {
+        $name = $this->config->blockname ?? get_string('pluginname', 'block_carousel');
+        $this->title = $name;
     }
 }

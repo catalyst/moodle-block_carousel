@@ -40,7 +40,7 @@ require_capability('moodle/block:edit', $context);
 
 $editurl = "carousel_{$blockid}_editurl";
 $prevurl = $SESSION->$editurl;
-$prevurl->params(['sesskey' => sesskey(), 'bui_editid' => $blockid]);
+$prevurl->param('sesskey', sesskey());
 $storage = get_file_storage();
 
 // Form data.
@@ -122,9 +122,19 @@ if ($form->is_cancelled()) {
 
 } else if ($fromform = $form->get_data()) {
     $record = new \stdClass();
+    $record->url = $fromform->url;
+    if (!empty($fromform->url)) {
+        $courseurl = new moodle_url('course/view.php');
+        $formurl = new moodle_url($fromform->url);
+        // If URL is a course link, autofill some data.
+        if ($courseurl->compare($formurl, URL_MATCH_BASE)) {
+            $record->courseid = $formurl->get_param('id');
+        }
+    }
+
     $record->blockid = $blockid;
     $record->title = $fromform->title;
-    $record->url = $fromform->url;
+
     $record->text = $fromform->text;
     $record->interactions = 0;
     $record->newtab = $fromform->newtab;
@@ -170,7 +180,7 @@ if ($form->is_cancelled()) {
             $image = true;
         }
     }
-    if (!$image) {
+    if (!$image && count($files) > 1) {
         // No file was a valid image. Update row to video mode.
         $DB->set_field('block_carousel', 'contenttype', 'video', ['id' => $recordid]);
     }

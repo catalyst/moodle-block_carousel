@@ -88,47 +88,38 @@ class slide_table extends \flexible_table implements \renderable {
 
         $currorder = \block_carousel\local\slide_manager::get_current_order($blockid);
         $context = context_block::instance($blockid);
-        $rows = $DB->get_records('block_carousel', ['blockid' => $blockid]);
+
+        $cache = \cache::make('block_carousel', 'slides');
+        $slidedata = $cache->get_many($currorder);
 
         $slidenum = 1;
         foreach ($currorder as $id) {
+            $slide = (object) $slidedata[$id];
             $data = [];
-            $data['title'] = !empty($rows[$id]->title) ? $rows[$id]->title : get_string('none');
-            $data['text'] = !empty($rows[$id]->text) ? $rows[$id]->text : get_string('none');
-            if ($rows[$id]->modalcontent) {
+            $data['title'] = !empty($slide->title) ? $slide->title : get_string('none');
+            $data['text'] = !empty($slide->text) ? $slide->text : get_string('none');
+            if ($slide->modalcontent) {
                 $data['url'] = get_string('modal', 'block_carousel');
-            } else if (!empty($rows[$id]->url)) {
-                $data['url'] = \html_writer::link($rows[$id]->url, $rows[$id]->url);
+            } else if (!empty($slide->url)) {
+                $data['url'] = \html_writer::link($slide->url, $slide->url);
             } else {
                 $data['url'] = get_string('none');
             }
-            $data['interactions'] = $rows[$id]->interactions;
+            // We need to get interactions from the DB, as they will likely be wrong in cache.
+            $data['interactions'] = $DB->get_field('block_carousel', 'interactions', ['id' => $slide->id]);
 
             // Is it a timed release?
-            if (!empty($rows[$id]->timedstart) || !empty($rows[$id]->timedend)) {
+            if (!empty($slide->timedstart) || !empty($slide->timedend)) {
                 $data['timed'] = get_string('yes');
             } else {
                 $data['timed'] = get_string('no');
             }
 
             // Get file preview.
-            $storage = get_file_storage();
-            $files = $storage->get_area_files($context->id, 'block_carousel', 'content', $id);
-            // Search files for first found content file.
-            foreach ($files as $file) {
-                if (!$file->is_directory()) {
-                    $url = \moodle_url::make_pluginfile_url(
-                        $file->get_contextid(),
-                        $file->get_component(),
-                        $file->get_filearea(),
-                        $file->get_itemid(),
-                        $file->get_filepath(),
-                        $file->get_filename()
-                    );
-                    $url->param('preview', 'thumb');
-                    $data['content'] = \html_writer::img($url, $data['text']);
-                }
-            }
+            $url = $slide->link;
+            $url->param('preview', 'thumb');
+            $data['content'] = \html_writer::img($url, $data['text']);
+
             if (empty($data['content'])) {
                 // No thumbnail could be generated.
                 $data['content'] = 'No thumbnail found.';
@@ -150,7 +141,7 @@ class slide_table extends \flexible_table implements \renderable {
             $classes = 'slidetable';
 
             // Enable / Disable.
-            if (!$rows[$id]->disabled) {
+            if (!$slide->disabled) {
                 $icon = $OUTPUT->pix_icon('t/hide', get_string('disable'));
                 $actions .= \html_writer::link(new \moodle_url('/blocks/carousel/add_slide.php',
                     ['bid' => $blockid, 'id' => $id, 'action' => 'disable']), $icon);
