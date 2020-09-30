@@ -25,6 +25,8 @@
 
 namespace block_carousel\cache;
 
+defined('MOODLE_INTERNAL') || die();
+
 class slide_cache implements \cache_data_source {
     /** @var experiment_cache the singleton instance of this class. */
     protected static $slidecache = null;

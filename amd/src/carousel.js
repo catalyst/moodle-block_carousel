@@ -33,15 +33,13 @@ define(['jquery', 'core/modal_factory', 'core/ajax', 'block_carousel/slick'], fu
                 adaptiveHeight: true,
                 autoplay: autoplay,
                 autoplaySpeed: playspeed,
-                focus
             });
 
             // This is a special case for when carousel is embedded in another block.
             // When the carousel is resized, we need to resize.
             // This causes slick to natively resize itself.
-            const observer = new ResizeObserver(function() {
+            var observer = new ResizeObserver(function() {
                 $(window).trigger('resize');
-                $(document).trigger('ready');
             });
 
             observer.observe(carousel.get('0'));

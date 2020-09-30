@@ -79,6 +79,5 @@ function xmldb_block_carousel_upgrade($oldversion) {
         upgrade_block_savepoint(true, 2020092400, 'carousel');
     }
 
-
     return true;
 }

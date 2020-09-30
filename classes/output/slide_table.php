@@ -105,7 +105,8 @@ class slide_table extends \flexible_table implements \renderable {
             } else {
                 $data['url'] = get_string('none');
             }
-            $data['interactions'] = $slide->interactions;
+            // We need to get interactions from the DB, as they will likely be wrong in cache.
+            $data['interactions'] = $DB->get_field('block_carousel', 'interactions', ['id' => $slide->id]);
 
             // Is it a timed release?
             if (!empty($slide->timedstart) || !empty($slide->timedend)) {

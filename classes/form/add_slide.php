@@ -44,8 +44,7 @@ class add_slide extends \moodleform {
         $mform->setType('title', PARAM_TEXT);
 
         $mform->addElement('textarea', 'text', get_string('slidetext', 'block_carousel'), ['cols' => 39]);
-        // Raw. This is formatted before being stored.
-        $mform->setType('text', PARAM_RAW);
+        $mform->setType('text', PARAM_TEXT);
 
         $mform->addElement('filemanager', 'content',
                 get_string('slideimage', 'block_carousel'), null, block_carousel_file_options());

@@ -1490,22 +1490,6 @@
 
         $(window).on('resize.slick.slick-' + _.instanceUid, $.proxy(_.resize, _));
 
-        // Event handler to continuously resize carousel as navdrawer opens/closes
-        $('[data-action="toggle-drawer"]').on('click', function(e) {
-            var start = null;
-            var resize = function(timestamp) {
-                if (!start) start = timestamp;
-                var progress = timestamp - start;
-                $(window).trigger('resize.slick.slick-' + _.instanceUid);
-                $(document).trigger('ready.slick.slick-' + _.instanceUid);
-                if (progress < 350) {
-                    window.requestAnimationFrame(resize);
-                }
-            }
-
-            window.requestAnimationFrame(resize);
-        });
-
         $('[draggable!=true]', _.$slideTrack).on('dragstart', _.preventDefault);
 
         $(window).on('load.slick.slick-' + _.instanceUid, _.setPosition);
@@ -1991,12 +1975,15 @@
     Slick.prototype.resize = function() {
 
         var _ = this;
-        clearTimeout(_.windowDelay);
-        _.windowDelay = window.setTimeout(function() {
-            _.windowWidth = $(window).width();
-            _.checkResponsive();
-            if( !_.unslicked ) { _.setPosition(); }
-        }, 10);
+
+        if ($(window).width() !== _.windowWidth) {
+            clearTimeout(_.windowDelay);
+            _.windowDelay = window.setTimeout(function() {
+                _.windowWidth = $(window).width();
+                _.checkResponsive();
+                if( !_.unslicked ) { _.setPosition(); }
+            }, 50);
+        }
     };
 
     Slick.prototype.removeSlide = Slick.prototype.slickRemove = function(index, removeBefore, removeAll) {
