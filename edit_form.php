@@ -69,7 +69,12 @@ class block_carousel_edit_form extends block_edit_form {
         $blockid = $this->block->instance->id;
         // Setup the return url for slide actions.
         $editurl = "carousel_{$blockid}_editurl";
-        $SESSION->$editurl = $this->page->url;
+        $currurl = $this->page->url;
+        // If bui_editid is set, we are on a standard block page. Add the param back in.
+        if (!empty(optional_param('bui_editid', null, PARAM_INT))) {
+            $currurl->param('bui_editid', required_param('bui_editid', PARAM_INT));
+        }
+        $SESSION->$editurl = $currurl;
         $table = new \block_carousel\output\slide_table('carousel_slides');
         $html = $table->out($blockid);
         $mform->addElement('html', $html);

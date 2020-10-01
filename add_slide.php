@@ -134,8 +134,9 @@ if ($form->is_cancelled()) {
 
     $record->blockid = $blockid;
     $record->title = $fromform->title;
-
+    $record->notitle = $fromform->notitle;
     $record->text = $fromform->text;
+    $record->notext = $fromform->notext;
     $record->interactions = 0;
     $record->newtab = $fromform->newtab;
     $record->disabled = 0;

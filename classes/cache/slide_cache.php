@@ -66,9 +66,13 @@ class slide_cache implements \cache_data_source {
         if (!empty($data['courseid'])) {
             $iscourse = true;
             $course = get_course($data['courseid']);
-            $data['title'] = $course->fullname;
-            $data['text'] = $course->summary;
+            $data['title'] = empty($data['title']) ? $course->fullname : $data['title'];
+            $data['text'] = empty($data['text']) ? $course->fullname : $data['text'];
         }
+
+        // If either text or title is disabled, override here.
+        $data['title'] = $data['notitle'] ? '' : $data['title'];
+        $data['text'] = $data['notext'] ? '' : $data['text'];
 
         // Find the relevant content for the slide.
         $context = \context_block::instance($record->blockid);

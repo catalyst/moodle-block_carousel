@@ -117,8 +117,10 @@ class slide_table extends \flexible_table implements \renderable {
 
             // Get file preview.
             $url = $slide->link;
-            $url->param('preview', 'thumb');
-            $data['content'] = \html_writer::img($url, $data['text']);
+            if (!empty($url)) {
+                $url->param('preview', 'thumb');
+                $data['content'] = \html_writer::img($url, $data['text']);
+            }
 
             if (empty($data['content'])) {
                 // No thumbnail could be generated.

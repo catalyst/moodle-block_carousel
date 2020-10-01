@@ -43,8 +43,18 @@ class add_slide extends \moodleform {
         $mform->addElement('text', 'title', get_string('slidetitle', 'block_carousel'), ['size' => 40]);
         $mform->setType('title', PARAM_TEXT);
 
+        $mform->addElement('advcheckbox', 'notitle', get_string('notitle', 'block_carousel'));
+        $mform->setType('notitle', PARAM_BOOL);
+        $mform->setDefault('notitle', 0);
+        $mform->disabledIf('title', 'notitle', 'checked');
+
         $mform->addElement('textarea', 'text', get_string('slidetext', 'block_carousel'), ['cols' => 39]);
         $mform->setType('text', PARAM_TEXT);
+
+        $mform->addElement('advcheckbox', 'notext', get_string('notext', 'block_carousel'));
+        $mform->setType('notext', PARAM_BOOL);
+        $mform->setDefault('notext', 0);
+        $mform->disabledIf('text', 'notext', 'checked');
 
         $mform->addElement('filemanager', 'content',
                 get_string('slideimage', 'block_carousel'), null, block_carousel_file_options());
