@@ -121,6 +121,18 @@ class block_carousel extends block_base {
         $cache = cache::make('block_carousel', 'slides');
         $data = $cache->get_many($order);
 
+        // If its a multislide, we need to pick a consistent ratio.
+        // Lets just pick the first slide.
+        if ($slides > 1) {
+            $firstslide = reset($data);
+            $height = $firstslide['heightres'];
+            if ($height === 0) {
+                $ratio = 1;
+            } else {
+                $ratio = ($firstslide['widthres']/$firstslide['heightres']);
+            }
+        }
+
         $numslides = count($order);
         foreach ($data as $slideid => $data) {
             $data = (object) $data;
@@ -147,11 +159,15 @@ class block_carousel extends block_base {
                 $heightvalue = $matches[0];
                 $unit = trim(str_replace($heightvalue, '', $height));
 
-                if ($data->heightres === 0) {
-                    $ratio = 1;
-                } else {
-                    $ratio = ($data->widthres / $data->heightres);
+                // If not a multislide, find the ratio of this one slide.
+                if ($slides <= 1) {
+                    if ($data->heightres === 0) {
+                        $ratio = 1;
+                    } else {
+                        $ratio = ($data->widthres / $data->heightres);
+                    }
                 }
+
                 $paddingbottom = (round((1 / $ratio), 4) * 100) . '%';
                 $width = (round(($ratio * $heightvalue), 2)) . $unit;
             }
