@@ -30,6 +30,8 @@ require_once($CFG->dirroot.'/blocks/carousel/lib.php');
 
 class add_slide extends \moodleform {
     public function definition() {
+        global $PAGE;
+
         $mform = $this->_form;
 
         $mform->addElement('text', 'url', get_string('slideurl', 'block_carousel'), ['size' => 40]);
@@ -60,7 +62,15 @@ class add_slide extends \moodleform {
                 get_string('slideimage', 'block_carousel'), null, block_carousel_file_options());
         $mform->setType('content', PARAM_FILE);
 
-        $mform->addElement('editor', 'modal', get_string('modaltext', 'block_carousel'), ['maxfiles' => 0]);
+        $textfieldoptions = [
+            'trusttext' => false,
+            'subdirs' => false,
+            'maxfiles' => -1,
+            'maxbytes' => 1,
+            'context' => $PAGE->context,
+            'enable_filemanagement' => false
+        ];
+        $mform->addElement('editor', 'modal', get_string('modaltext', 'block_carousel'), null, $textfieldoptions);
         $mform->setType('modal', PARAM_RAW);
 
         $mform->addElement('date_time_selector', 'timedstart', get_string('from'), [
