@@ -36,3 +36,19 @@
 .block_carousel .slick-slide {
     padding: 1em !important;
 }
+
+.block_carousel.modal.show .modal-dialog {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.block_carousel.modal.show .modal-body {
+    max-height: 450px;
+    overflow-y: auto;
+    font-size: 14px;
+}
+
+.slick-prev::before, .slick-next::before {
+    color: rgba(0,0,0,.4) !important;
+}

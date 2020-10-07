@@ -129,7 +129,7 @@ class block_carousel extends block_base {
             if ($height === 0) {
                 $ratio = 1;
             } else {
-                $ratio = ($firstslide['widthres']/$firstslide['heightres']);
+                $ratio = ($firstslide['widthres'] / $firstslide['heightres']);
             }
         }
 
@@ -180,8 +180,9 @@ class block_carousel extends block_base {
                     'id' => 'id_slide' . $slideid
                 ];
                 if ($modalcontent) {
-                    $this->page->requires->js_call_amd('block_carousel/carousel', 'modal', [$slideid, $modalcontent, $title]);
+                    $this->page->requires->js_call_amd('block_carousel/carousel', 'modal', [$slideid, $title]);
                     $attr['style'] = 'cursor: pointer;';
+                    $attr['data-modalcontent'] = $modalcontent;
                 } else if ($url) {
                     $attr['href'] = $url;
                     if ($data->newtab) {

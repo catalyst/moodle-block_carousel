@@ -45,16 +45,18 @@ define(['jquery', 'core/modal_factory', 'core/ajax', 'block_carousel/slick'], fu
             observer.observe(carousel.get('0'));
         },
 
-        modal: function(rowid, modalContent, modalTitle) {
+        modal: function(rowid, modalTitle) {
             var slide = document.querySelector('#id_slide' + rowid);
             slide.addEventListener('click', function(){
                 ModalFactory.create(
                     {
                         type: ModalFactory.types.CANCEL,
                         title: modalTitle,
-                        body: modalContent
+                        body: slide.dataset.modalcontent
                     }
                 ).then($.proxy(function(modal) {
+                    modal.getRoot().addClass('block_carousel');
+
                     modal.setLarge();
                     modal.show();
                 }));
