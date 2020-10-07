@@ -281,7 +281,7 @@ class block_carousel extends block_base {
         $config->playspeed = $data->playspeed;
         $config->autoplay = $data->autoplay;
         $config->slides = $data->slides;
-        $config->blockname = $data->blockname;
+        $config->title = $data->title;
         // Saving needs to maintain order.
         if (!empty($this->config) && !empty($this->config->order)) {
             $config->order = $this->config->order;
@@ -299,7 +299,7 @@ class block_carousel extends block_base {
     }
 
     public function specialization() {
-        $name = $this->config->blockname ?? get_string('pluginname', 'block_carousel');
+        $name = $this->config->title ?? get_string('pluginname', 'block_carousel');
         $this->title = $name;
     }
 }

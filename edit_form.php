@@ -41,9 +41,9 @@ class block_carousel_edit_form extends block_edit_form {
 
         $mform->addElement('header', 'configheader', get_string('blocksettings', 'block_carousel'));
 
-        $mform->addElement('text', 'config_blockname', get_string('name'));
-        $mform->setType('config_blockname', PARAM_TEXT);
-        $mform->setDefault('config_blockname', get_string('pluginname', 'block_carousel'));
+        $mform->addElement('text', 'config_title', get_string('name'));
+        $mform->setType('config_title', PARAM_TEXT);
+        $mform->setDefault('config_title', get_string('pluginname', 'block_carousel'));
 
         $mform->addElement('text', 'config_height', get_string('configheight', 'block_carousel'));
         $mform->setType('config_height', PARAM_TEXT);
