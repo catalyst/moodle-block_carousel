@@ -24,6 +24,25 @@ define(['jquery', 'core/modal_factory', 'core/ajax', 'block_carousel/slick'], fu
     return {
         init: function(blockid, numslides, autoplay, playspeed) {
             $('#carousel' + blockid + ' .slidewrap').show();
+
+            // Setup breakpoint array.
+            // Breakpoints set to 1 above the standard width, as expressions like >= 1024 don't work.
+            if (numslides > 1) {
+                var breakpoints = [{
+                    breakpoint: 1025,
+                    settings: {
+                        slidesToShow: 2,
+                    }
+                }, {
+                    breakpoint: 769,
+                    settings: {
+                        slidesToShow: 1,
+                    }
+                }];
+            } else {
+                var breakpoints = [];
+            }
+
             var carousel = $('#carousel' + blockid);
             carousel.slick({
                 dots: true,
@@ -33,6 +52,7 @@ define(['jquery', 'core/modal_factory', 'core/ajax', 'block_carousel/slick'], fu
                 adaptiveHeight: true,
                 autoplay: autoplay,
                 autoplaySpeed: playspeed,
+                responsive: breakpoints
             });
 
             // This is a special case for when carousel is embedded in another block.
