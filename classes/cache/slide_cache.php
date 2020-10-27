@@ -64,10 +64,22 @@ class slide_cache implements \cache_data_source {
         // If courseid is set, generate data based on course info.
         $iscourse = false;
         if (!empty($data['courseid'])) {
-            $iscourse = true;
-            $course = get_course($data['courseid']);
-            $data['title'] = empty($data['title']) ? $course->fullname : $data['title'];
-            $data['text'] = empty($data['text']) ? $course->fullname : $data['text'];
+            $invalid = false;
+            try {
+                $course = get_course($data['courseid']);
+            } catch (\dml_exception $e) {
+                // The course was not found.
+                $invalid = true;
+            }
+            // Ensure we have a good course before doing anything.
+            if ($invalid) {
+                $data['title'] = '';
+                $data['text'] = '';
+            } else {
+                $iscourse = true;
+                $data['title'] = empty($data['title']) ? $course->fullname : $data['title'];
+                $data['text'] = empty($data['text']) ? $course->fullname : $data['text'];
+            }
         }
 
         // If either text or title is disabled, override here.
