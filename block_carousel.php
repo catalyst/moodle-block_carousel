@@ -142,7 +142,7 @@ class block_carousel extends block_base {
 
             // Check release timing.
             if ((!empty($data->timedstart) && time() < $data->timedstart) ||
-                (!empty($data->timedstart) && time() > $data->timedend)) {
+                (!empty($data->timedend) && time() > $data->timedend)) {
                 continue;
             }
 
