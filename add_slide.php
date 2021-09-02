@@ -137,7 +137,6 @@ if ($form->is_cancelled()) {
     $record->notitle = $fromform->notitle;
     $record->text = $fromform->text;
     $record->notext = $fromform->notext;
-    $record->interactions = 0;
     $record->newtab = $fromform->newtab;
     $record->disabled = 0;
 
@@ -153,6 +152,7 @@ if ($form->is_cancelled()) {
 
     $record->contenttype = 'image';
     if ($action !== 'edit') {
+        $record->interactions = 0;
         $id = $DB->insert_record('block_carousel', $record, true);
         $recordid = $id;
         $slidecount = count(\block_carousel\local\slide_manager::get_current_order($blockid));
