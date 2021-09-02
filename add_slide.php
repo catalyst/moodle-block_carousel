@@ -155,7 +155,9 @@ if ($form->is_cancelled()) {
     if ($action !== 'edit') {
         $id = $DB->insert_record('block_carousel', $record, true);
         $recordid = $id;
+        $slidecount = count(\block_carousel\local\slide_manager::get_current_order($blockid));
         \block_carousel\local\slide_manager::add_id_to_order($blockid, $recordid);
+        \block_carousel\local\slide_manager::move_order_position($blockid, $recordid, -$slidecount);
     } else {
         $record->id = $id;
         $DB->update_record('block_carousel', $record);
