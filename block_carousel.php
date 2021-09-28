@@ -135,6 +135,9 @@ class block_carousel extends block_base {
 
         $numslides = count($order);
         foreach ($data as $slideid => $data) {
+            if (empty($data)) {
+                continue;
+            }
             $data = (object) $data;
             if ($data->disabled) {
                 continue;
