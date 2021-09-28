@@ -87,7 +87,12 @@ class slide_cache implements \cache_data_source {
         $data['text'] = $data['notext'] ? '' : $data['text'];
 
         // Find the relevant content for the slide.
-        $context = \context_block::instance($record->blockid);
+        try {
+            $context = \context_block::instance($record->blockid);
+        } catch (\dml_missing_record_exception $e) {
+            return [];
+        }
+
         $selectedfile = null;
         $storage = get_file_storage();
 
