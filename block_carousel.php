@@ -126,7 +126,7 @@ class block_carousel extends block_base {
         if ($slides > 1) {
             $firstslide = reset($data);
             $height = $firstslide['heightres'];
-            if ($height === 0) {
+            if (empty($height)) {
                 $ratio = 1;
             } else {
                 $ratio = ($firstslide['widthres'] / $firstslide['heightres']);
@@ -140,6 +140,11 @@ class block_carousel extends block_base {
             }
             $data = (object) $data;
             if ($data->disabled) {
+                continue;
+            }
+
+            // Filter any files that are not present or broken.
+            if (is_null($data->heightres) && is_null($data->widthres) && $data->contenttype === 'image') {
                 continue;
             }
 

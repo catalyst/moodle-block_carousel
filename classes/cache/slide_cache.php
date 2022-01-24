@@ -141,8 +141,13 @@ class slide_cache implements \cache_data_source {
             $data['widthres'] = 0;
         } else if ($record->contenttype === 'image') {
             $imageinfo = $selectedfile->get_imageinfo();
-            $data['heightres'] = $imageinfo['height'];
-            $data['widthres'] = $imageinfo['width'];
+            if (!$imageinfo) {
+                $data['heightres'] = null;
+                $data['widthres'] = null;
+            } else {
+                $data['heightres'] = $imageinfo['height'];
+                $data['widthres'] = $imageinfo['width'];
+            }
         } else {
             // Use FFMpeg to get resolution.
             $path = $selectedfile->copy_content_to_temp();
