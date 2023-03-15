@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/catalyst/moodle-block_carousel.svg?branch=master)](https://travis-ci.org/catalyst/moodle-block_carousel)
+![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/catalyst/moodle-block_carousel/ci.yaml?branch=master&label=ci)
 
 https://moodle.org/plugins/block_carousel
 
