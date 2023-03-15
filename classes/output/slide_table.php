@@ -157,7 +157,13 @@ class slide_table extends \flexible_table implements \renderable {
             }
 
             // Setup the drag handles for DnD.
-            $actions .= \html_writer::span($OUTPUT->render_from_template('core/drag_handle',
+            if (file_exists(\core_component::get_component_directory('core') . '/templates/drag_handle.mustache')) {
+                $templatename = 'core/drag_handle';
+            } else {
+                $templatename = 'block_carousel/drag_handle';
+            }
+
+            $actions .= \html_writer::span($OUTPUT->render_from_template($templatename,
             ['movetitle' => get_string('move')]), '', [
                 'data-action' => 'move',
                 'data-rowid' => $id,
@@ -191,7 +197,9 @@ class slide_table extends \flexible_table implements \renderable {
 
         // Get the total row count for setting pagesize.
         $count = $DB->count_records('block_carousel', ['id' => $id]);
-        $this->pagesize($count, $count);
+        if ($count != 0) {
+            $this->pagesize($count, $count);
+        }
 
         $this->populate_block_table($id);
         $this->finish_output();
@@ -246,7 +254,7 @@ class slide_table extends \flexible_table implements \renderable {
                 ];
 
                 $celltype = 'td';
-                if ($this->headercolumn && $column == $this->headercolumn) {
+                if (isset($this->headercolumn) && $column == $this->headercolumn) {
                     $celltype = 'th';
                     $attributes['scope'] = 'row';
                 }
