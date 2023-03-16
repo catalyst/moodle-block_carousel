@@ -1,4 +1,4 @@
-![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/catalyst/moodle-block_carousel/ci.yaml?branch=master&label=ci)
+![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/catalyst/moodle-block_carousel/ci.yml?branch=master&label=ci)
 
 https://moodle.org/plugins/block_carousel
 
