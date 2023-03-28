@@ -31,7 +31,7 @@ $functions = [
         'description' => 'Process AJAX slide arrangement.',
         'type' => 'write',
         'ajax' => true,
-        'capabilities' => ['moodle/block:edit'],
+        'capabilities' => 'moodle/block:edit',
     ],
     'block_carousel_record_interaction' => [
         'classname' => 'block_carousel\external\external',
@@ -39,6 +39,6 @@ $functions = [
         'description' => 'Record a user interaction with a slide.',
         'type' => 'update',
         'ajax' => true,
-        'capabilities' => [],
+        'capabilities' => '',
     ]
 ];
