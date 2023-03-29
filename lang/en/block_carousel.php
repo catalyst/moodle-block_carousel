@@ -48,6 +48,10 @@ $string['slideurl_help'] = 'Enter URL to visit on click. If you enter a course U
 $string['pluginname'] = 'Carousel';
 $string['timedrelease'] = 'Timed release';
 $string['timeperioderror'] = 'Start time must be less than end time.';
+$string['cohorts_help'] = 'Select one or more {$a} to restrict visibility to members of those {$a}. A user will be able to see the slide if they are a member of at least one of the {$a} selected. If none are selected, then the slide will be visible to everyone. Administrators will always see all slides.';
+$string['create_cohorts_help'] = 'Create {$a} to be able to select them.';
+$string['no_thumbnail'] = 'No thumbnail found.';
+$string['visible_to_everyone'] = 'Visible to everyone';
 
 // Settings.
 $string['settings:ffprobe:pathtoffprobe'] = 'FFProbe binary path';

@@ -1,5 +1,5 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
+// This file is part of Moodle - https://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,16 +15,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details
+ * Event observer declaration.
  *
  * @package   block_carousel
- * @copyright 2016 Brendan Heywood (brendan@catalyst-au.net)
+ * @author    Jason den Dulk <jasondendulk@catalyst-au.net>
+ * @copyright 2023, Catalyst IT
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2023032800;        // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2015111000;        // Requires this Moodle version.
-$plugin->component = 'block_carousel';  // Full name of the plugin (used for diagnostics).
-$plugin->supported = [30, 401];
+$observers = [
+    [
+        'eventname'   => '\core\event\cohort_deleted',
+        'callback'    => '\block_carousel\observers::on_cohort_deleted',
+    ],
+];
