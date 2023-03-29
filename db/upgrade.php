@@ -103,5 +103,20 @@ function xmldb_block_carousel_upgrade($oldversion) {
         upgrade_block_savepoint(true, 2020100100, 'carousel');
     }
 
+    if ($oldversion < 2023032800) {
+
+        // Define field notitle to be added to block_carousel.
+        $table = new xmldb_table('block_carousel');
+        $field = new xmldb_field('cohorts', XMLDB_TYPE_CHAR, '256', null, XMLDB_NOTNULL, null, '0', 'modalcontent');
+
+        // Conditionally launch add field cohorts.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Carousel savepoint reached.
+        upgrade_block_savepoint(true, 2023032800, 'carousel');
+    }
+
     return true;
 }

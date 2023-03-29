@@ -56,6 +56,7 @@ class slide_table extends \flexible_table implements \renderable {
                 'content',
                 'interactions',
                 'timed',
+                'cohorts',
                 'actions',
         ));
         $this->define_headers(array(
@@ -65,6 +66,7 @@ class slide_table extends \flexible_table implements \renderable {
                 get_string('content'),
                 get_string('interactions', 'block_carousel'),
                 get_string('timedrelease', 'block_carousel'),
+                get_string('cohorts', 'cohort'),
                 get_string('actions'),
             )
         );
@@ -124,8 +126,20 @@ class slide_table extends \flexible_table implements \renderable {
 
             if (empty($data['content'])) {
                 // No thumbnail could be generated.
-                $data['content'] = 'No thumbnail found.';
+                $data['content'] = get_string('no_thumbnail', 'block_carousel');
             }
+
+            // Cohorts that can see the slide.
+            if (empty($slide->cohorts)) {
+                $cohortnames = [get_string('visible_to_everyone', 'block_carousel')];
+            } else {
+                $ids = explode(',', $slide->cohorts);
+                [$insql, $inparams] = $DB->get_in_or_equal($ids);
+                $sql = "SELECT id, name FROM {cohort} WHERE id $insql order by name asc";
+                $cohortnames = $DB->get_records_sql_menu($sql, $inparams);
+            }
+
+            $data['cohorts'] = implode('<br>', $cohortnames);
 
             // Setup actions.
             $icon = $OUTPUT->pix_icon('t/edit', get_string('edit'));

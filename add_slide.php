@@ -138,6 +138,7 @@ if ($form->is_cancelled()) {
     $record->text = $fromform->text;
     $record->notext = $fromform->notext;
     $record->newtab = $fromform->newtab;
+    $record->cohorts = !empty($fromform->cohorts) ? implode(',', $fromform->cohorts) : '';
     $record->disabled = 0;
 
     $modaltext = trim(html_to_text($fromform->modal['text']));

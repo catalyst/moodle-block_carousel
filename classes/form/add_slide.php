@@ -30,7 +30,7 @@ require_once($CFG->dirroot.'/blocks/carousel/lib.php');
 
 class add_slide extends \moodleform {
     public function definition() {
-        global $PAGE;
+        global $PAGE, $DB;
 
         $mform = $this->_form;
 
@@ -61,6 +61,17 @@ class add_slide extends \moodleform {
         $mform->addElement('filemanager', 'content',
                 get_string('slideimage', 'block_carousel'), null, block_carousel_file_options());
         $mform->setType('content', PARAM_FILE);
+
+        // Cohort selector.
+        $options = $DB->get_records_menu('cohort', [], 'name ASC',  'id, name');
+        $element = $mform->addElement('select', 'cohorts', get_string('cohorts', 'cohort'), $options);
+        $element->setMultiple(true);
+        $cohortstring = strtolower(get_string('cohorts', 'cohort'));
+        $mform->addElement('static', 'cohorts_help', '', get_string('cohorts_help', 'block_carousel', $cohortstring));
+        if (count($options) == 0) {
+            $mform->addElement('static', 'create_cohorts_help', '',
+                    get_string('create_cohorts_help', 'block_carousel', $cohortstring));
+        }
 
         $textfieldoptions = [
             'trusttext' => false,

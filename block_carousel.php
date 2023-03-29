@@ -21,15 +21,6 @@
  * @copyright 2016 Brendan Heywood (brendan@catalyst-au.net)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-/**
- * Carousel block
- *
- * @copyright 2016 Brendan Heywood (brendan@catalyst-au.net)
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-defined('MOODLE_INTERNAL') || die;
-
 class block_carousel extends block_base {
 
     /**
@@ -93,7 +84,7 @@ class block_carousel extends block_base {
      * The html for the carousel
      */
     public function get_content() {
-        global $CFG;
+        global $CFG, $USER, $DB;
 
         require_once($CFG->libdir . '/filelib.php');
 
@@ -133,6 +124,21 @@ class block_carousel extends block_base {
             }
         }
 
+        if (function_exists('cohort_get_user_cohorts')) {
+            // In Moodle from 3.5.
+            $cohorts = array_keys(cohort_get_user_cohorts($USER->id));
+        } else if (function_exists('totara_cohort_get_user_cohorts')) {
+            // In Totara.
+            $cohorts = totara_cohort_get_user_cohorts($USER->id);
+        } else {
+            // Fallback if the above two functions are not available.
+            $sql = 'SELECT c.id
+              FROM {cohort} c
+              JOIN {cohort_members} cm ON c.id = cm.cohortid
+             WHERE cm.userid = ?';
+            $cohorts = array_keys($DB->get_records_sql($sql, array($USER->id)));
+        }
+
         $numslides = count($order);
         foreach ($data as $slideid => $data) {
             if (empty($data)) {
@@ -145,6 +151,11 @@ class block_carousel extends block_base {
 
             // Filter any files that are not present or broken.
             if (is_null($data->heightres) && is_null($data->widthres) && $data->contenttype === 'image') {
+                continue;
+            }
+
+            // Filter for cohorts. Admins can always see the slide. If cohort list is empty, then everyone can see it.
+            if (!is_siteadmin($USER) && !empty($data->cohorts) && empty(array_intersect($cohorts, explode(',', $data->cohorts)))) {
                 continue;
             }
 
