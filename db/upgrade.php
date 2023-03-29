@@ -118,5 +118,20 @@ function xmldb_block_carousel_upgrade($oldversion) {
         upgrade_block_savepoint(true, 2023032800, 'carousel');
     }
 
+    if ($oldversion < 2023032803) {
+
+        // Reset default to empty.
+        $table = new xmldb_table('block_carousel');
+        $field = new xmldb_field('cohorts', XMLDB_TYPE_CHAR, '1333', null, XMLDB_NOTNULL, null, null, 'modalcontent');
+
+        $dbman->change_field_default($table, $field);
+        $dbman->change_field_precision($table, $field);
+        // Update all fields set to zero to empty.
+        $DB->execute("update {block_carousel} set cohorts='' where cohorts='0'");
+
+        // Carousel savepoint reached.
+        upgrade_block_savepoint(true, 2023032803, 'carousel');
+    }
+
     return true;
 }
