@@ -30,6 +30,9 @@ use context_block;
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/tablelib.php');
 
+/**
+ * Slide table for block_carousel
+ */
 class slide_table extends \flexible_table implements \renderable {
 
     /**
@@ -195,9 +198,8 @@ class slide_table extends \flexible_table implements \renderable {
     /**
      * Adds data to the table then returns the table HTML.
      *
-     * @param  $id the block id to view.
-     * @param [type] $currorder the current slide ordering.
-     * @return void
+     * @param string|int $id the block id to view.
+     * @return string
      */
     public function out($id) {
         global $DB, $PAGE;

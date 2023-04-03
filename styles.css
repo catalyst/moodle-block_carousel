@@ -15,7 +15,7 @@
     top: 2%;
     padding: 1em;
     margin: 0;
-    text-shadow: 0px 2px 6px #000;
+    text-shadow: 0 2px 6px #000;
 }
 .block_carousel .slidewrap .title.multislide {
     padding: 5px 0 0 5px;
@@ -27,14 +27,14 @@
     right: 0;
     bottom: 0;
     padding: 1em;
-    background: rgba(0,0,0,.4);
+    background: rgba(0, 0, 0, .4);
 }
 .block_carousel .slidewrap .text.multislide {
     padding: 0 0 0 5px;
 }
 
 .block_carousel .slick-slide {
-    padding: 1em !important;
+    padding: 1em;
 }
 
 .block_carousel.modal.show .modal-dialog {
@@ -49,6 +49,7 @@
     font-size: 14px;
 }
 
-.slick-prev::before, .slick-next::before {
-    color: rgba(0,0,0,.4) !important;
+button.slick-prev::before,
+button.slick-next::before {
+    color: rgba(0, 0, 0, .4);
 }

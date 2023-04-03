@@ -20,12 +20,19 @@
  * @package     block_carousel
  * @author      Peter Burnett <peterburnett@catalyst-au.net>
  * @copyright   Catalyst IT Australia
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/upgradelib.php');
 
+/**
+ * Function to upgrade the database
+ *
+ * @param int $oldversion the version we are upgrading from
+ * @return bool result
+ */
 function xmldb_block_carousel_upgrade($oldversion) {
     global $DB;
 

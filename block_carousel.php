@@ -317,6 +317,9 @@ class block_carousel extends block_base {
         return true;
     }
 
+    /**
+     * Sets the title.
+     */
     public function specialization() {
         $name = $this->config->title ?? get_string('pluginname', 'block_carousel');
         $this->title = $name;

@@ -21,32 +21,51 @@
  * @copyright 2021 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/blocks/carousel/backup/moodle2/backup_carousel_stepslib.php');
 
 /**
  * Specialised backup task for the carousel block
- * (has own DB structures to backup)
- *
  */
 class backup_carousel_block_task extends backup_block_task {
 
+    /**
+     * Define (add) particular settings that each block can have
+     */
     protected function define_my_settings() {
     }
 
+    /**
+     * Define (add) particular steps that each block can have
+     */
     protected function define_my_steps() {
         // Block carousel has one structure step.
         $this->add_step(new backup_carousel_block_structure_step('carousel_structure', 'carousel.xml'));
     }
 
+    /**
+     * Define one array() of fileareas that each block controls
+     */
     public function get_fileareas() {
         return ['content'];
     }
 
+    /**
+     * Define one array() of configdata attributes
+     * that need to be processed by the contenttransformer
+     */
     public function get_configdata_encoded_attributes() {
         return [];
     }
 
+    /**
+     * Code the transformations to perform in the block in
+     * order to get transportable (encoded) links
+     *
+     * @param string $content
+     * @return string
+     */
     public static function encode_content_links($content) {
         return $content;
     }

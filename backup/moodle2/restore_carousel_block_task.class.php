@@ -22,35 +22,60 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once($CFG->dirroot . '/blocks/carousel/backup/moodle2/restore_carousel_stepslib.php'); // We have structure steps
+defined('MOODLE_INTERNAL') || die();
+
+require_once($CFG->dirroot . '/blocks/carousel/backup/moodle2/restore_carousel_stepslib.php'); // We have structure steps.
 
 /**
- * Specialised restore task for the carousel block
- * (has own DB structures to backup)
+ * Specialised restore task for the carousel block.
  *
+ * @package   block_carousel
+ * @copyright 2021 Nicholas Hoobin (nicholashoobin@catalyst-au.net)
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class restore_carousel_block_task extends restore_block_task {
 
+    /**
+     * Define (add) particular settings that each block can have
+     */
     protected function define_my_settings() {
     }
 
+    /**
+     * Define (add) particular steps that each block can have
+     */
     protected function define_my_steps() {
-        // Block carousel has one structure step
+        // Block carousel has one structure step.
         $this->add_step(new restore_carousel_block_structure_step('carousel_structure', 'carousel.xml'));
     }
 
+    /**
+     * Define one array() of fileareas that each block controls
+     */
     public function get_fileareas() {
         return ['content'];
     }
 
+    /**
+     * Define one array() of configdata attributes
+     * that need to be processed by the contenttransformer
+     */
     public function get_configdata_encoded_attributes() {
         return [];
     }
 
+    /**
+     * Define the contents in the activity that must be
+     * processed by the link decoder
+     */
     public static function define_decode_contents() {
         return [];
     }
 
+    /**
+     * Define the decoding rules for links belonging
+     * to the activity to be executed by the link decoder
+     */
     public static function define_decode_rules() {
         return [];
     }

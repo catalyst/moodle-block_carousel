@@ -21,10 +21,10 @@
  * @author      Peter Burnett <peterburnett@catalyst-au.net>
  * @copyright   Catalyst IT Australia
  */
-
-defined('MOODLE_INTERNAL') || die();
-
 class block_carousel_upgrade_helper {
+    /**
+     * Upgrade data within a carousel block.
+     */
     public static function upgrade_carousels_to_db() {
         global $DB;
 

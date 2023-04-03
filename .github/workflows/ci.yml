@@ -10,5 +10,5 @@ jobs:
     # secrets:
       # moodle_org_token: ${{ secrets.MOODLE_ORG_TOKEN }}
     with:
+      disable_phpunit: true # No unit tests at present.
       codechecker_max_warnings: 0 # CI should now fail on phpcs / code checker warnings.
-
