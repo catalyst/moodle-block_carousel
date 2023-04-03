@@ -32,6 +32,9 @@ use external_function_parameters;
 
 require_once("$CFG->libdir/externallib.php");
 
+/**
+ * Defines the carsousel API.
+ */
 class external extends external_api {
 
     /**

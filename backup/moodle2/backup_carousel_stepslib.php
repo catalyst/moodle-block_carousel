@@ -24,10 +24,15 @@
 
 
 /**
- * Define the complete carousel structure for backup, with file and id annotations
+ * Define the complete carousel structure for backup, with file and id annotations.
  */
 class backup_carousel_block_structure_step extends backup_block_structure_step {
 
+    /**
+     * Define the structure to be processed by this backup step.
+     *
+     * @return backup_nested_element
+     */
     protected function define_structure() {
         global $DB;
 
@@ -40,11 +45,11 @@ class backup_carousel_block_structure_step extends backup_block_structure_step {
         // Get array of slides.
         if (!empty($config->order)) {
             $slideids = explode(',', $config->order);
-            // Get the IN corresponding query
-            list($in_sql, $in_params) = $DB->get_in_or_equal($slideids);
-            // Define all the in_params as sqlparams
-            foreach ($in_params as $key => $value) {
-                $in_params[$key] = backup_helper::is_sqlparam($value);
+            // Get the IN corresponding query.
+            list($insql, $inparams) = $DB->get_in_or_equal($slideids);
+            // Define all the in_params as sqlparams.
+            foreach ($inparams as $key => $value) {
+                $inparams[$key] = backup_helper::is_sqlparam($value);
             }
         }
 
@@ -58,26 +63,26 @@ class backup_carousel_block_structure_step extends backup_block_structure_step {
             'disabled', 'timedstart', 'timedend', 'courseid', 'notitle', 'notext'
         ]);
 
-        // Build the tree
+        // Build the tree.
         $carousel->add_child($slides);
         $slides->add_child($slide);
 
-        // Define sources
+        // Define sources.
         $carousel->set_source_array([(object)['id' => $this->task->get_blockid()]]);
 
-        // Only if there are slides
+        // Only if there are slides.
         if (!empty($config->order)) {
             $slide->set_source_sql("
                 SELECT *
                   FROM {block_carousel}
-                 WHERE id $in_sql", $in_params);
+                 WHERE id $insql", $inparams);
         }
 
-        // Annotations
+        // Annotations.
         $contextid = $this->get_setting_value(backup::VAR_CONTEXTID);
         $slide->annotate_files('block_carousel', 'content', null, $contextid);
 
-        // Return the root element (carousel), wrapped into standard block structure
+        // Return the root element (carousel), wrapped into standard block structure.
         return $this->prepare_block_structure($carousel);
     }
 }

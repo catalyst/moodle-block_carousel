@@ -25,8 +25,9 @@
 
 namespace block_carousel\local;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Slide manager for block_carousel
+ */
 class slide_manager {
 
     /**
@@ -47,7 +48,7 @@ class slide_manager {
      * Writes the current config for a block.
      *
      * @param int $blockid the block to write config for.
-     * @param stdClass the current block config.
+     * @param stdClass $config the current block config.
      * @return void
      */
     public static function write_config($blockid, $config) {
@@ -104,7 +105,7 @@ class slide_manager {
      * Moves a slideid in the ordering.
      *
      * @param int $blockid the block to modify.
-     * @param int $id the slide id to move.
+     * @param int $rowid the slide id to move.
      * @param int $position the number of positions to move
      * @return bool
      */

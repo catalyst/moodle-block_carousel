@@ -17,7 +17,7 @@
 /**
  * Form for setting questions to be used on the site
  *
- * @package     tool_securityquestions
+ * @package     block_carousel
  * @copyright   Peter Burnett <peterburnett@catalyst-au.net>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -28,7 +28,13 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/formslib.php');
 require_once($CFG->dirroot.'/blocks/carousel/lib.php');
 
+/**
+ * Form for adding/editing slides.
+ */
 class add_slide extends \moodleform {
+    /**
+     * Form definition.
+     */
     public function definition() {
         global $PAGE, $DB;
 
@@ -100,6 +106,13 @@ class add_slide extends \moodleform {
         $this->add_action_buttons();
     }
 
+    /**
+     * Validates the form data.
+     *
+     * @param array $data
+     * @param array $files
+     * @return array
+     */
     public function validation($data, $files) {
         // Ensure that the active period is valid if selected.
         $errors = parent::validation($data, $files);

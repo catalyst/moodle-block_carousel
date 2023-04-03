@@ -28,8 +28,14 @@
  */
 class restore_carousel_block_structure_step extends restore_structure_step {
 
+    /** @var array Slide map. */
     private $slidemapping;
 
+    /**
+     * Returns the structure to be processed by this restore_step.
+     *
+     * @return array
+     */
     protected function define_structure() {
         return [
             new restore_path_element('block', '/block', true),
@@ -38,13 +44,18 @@ class restore_carousel_block_structure_step extends restore_structure_step {
         ];
     }
 
+    /**
+     * Processes the data for the block.
+     *
+     * @param array|object $data
+     */
     public function process_block($data) {
         global $DB;
 
         $data = (object)$data;
         $slidesarr = []; // To accumulate the slide IDs. Referenced with the old slide ID as the array key.
 
-        // For any reason (non multiple, dupe detected...) block not restored, return
+        // For any reason (non multiple, dupe detected...) block not restored, return.
         if (!$this->task->get_blockid()) {
             return;
         }
@@ -67,7 +78,7 @@ class restore_carousel_block_structure_step extends restore_structure_step {
         // Save the mapping to reuse in the after_execute step.
         $this->slidemapping = $slidesarr;
 
-        // Adjust the serialized configdata->order to the created/mapped feeds
+        // Adjust the serialized configdata->order to the created/mapped feeds.
         $configdata = $DB->get_field('block_instances', 'configdata', ['id' => $this->task->get_blockid()]);
         $config = unserialize(base64_decode($configdata));
 
@@ -84,6 +95,13 @@ class restore_carousel_block_structure_step extends restore_structure_step {
         $DB->set_field('block_instances', 'configdata', $configdata, ['id' => $this->task->get_blockid()]);
     }
 
+    /**
+     * This method will be executed after the whole structure step have been processed
+     *
+     * After execution method for code needed to be executed after the whole structure
+     * has been processed. Useful for cleaning tasks, files process and others. Simply
+     * overwrite in in your steps if needed
+     */
     protected function after_execute() {
         global $DB;
 
@@ -105,7 +123,8 @@ class restore_carousel_block_structure_step extends restore_structure_step {
                 $file->itemid = $this->slidemapping[$file->itemid];
 
                 // Update the pathname hash as the itemid has changed.
-                $file->pathnamehash = sha1("/{$file->contextid}/{$file->component}/{$file->filearea}/{$file->itemid}".$file->filepath.$file->filename);
+                $file->pathnamehash = sha1("/{$file->contextid}/{$file->component}/{$file->filearea}/{$file->itemid}"
+                        .$file->filepath.$file->filename);
 
                 $DB->update_record('files', $file);
             }

@@ -25,9 +25,6 @@
 /**
  * Form for editing HTML block instances.
  *
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @package   block_carousel
- * @category  files
  * @param stdClass $course course object
  * @param stdClass $birecordorcm block instance record
  * @param stdClass $context context object
@@ -38,8 +35,6 @@
  * @return bool
  * @todo MDL-36050 improve capability check on stick blocks, so we can check user capability before sending images.
  */
-defined('MOODLE_INTERNAL') || die;
-
 function block_carousel_pluginfile($course, $birecordorcm, $context, $filearea, $args, $forcedownload, array $options=array()) {
     global $DB, $CFG, $USER;
 
@@ -78,7 +73,8 @@ function block_carousel_pluginfile($course, $birecordorcm, $context, $filearea, 
     $itemid = array_pop($args);
     $filepath = '/';
 
-    if (!$file = $fs->get_file($context->id, 'block_carousel', $filearea, $itemid, $filepath, $filename) or $file->is_directory()) {
+    $file = $fs->get_file($context->id, 'block_carousel', $filearea, $itemid, $filepath, $filename);
+    if (!$file || $file->is_directory()) {
         send_file_not_found();
     }
 
@@ -86,7 +82,11 @@ function block_carousel_pluginfile($course, $birecordorcm, $context, $filearea, 
     send_stored_file($file, null, 0, $forcedownload, $options);
 }
 
-
+/**
+ * The options for the image file picker for carousel slides.
+ *
+ * @return array Options to be passed to add_element().
+ */
 function block_carousel_file_options() {
     global $CFG;
 
