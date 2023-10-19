@@ -78,21 +78,13 @@ class restore_carousel_block_structure_step extends restore_structure_step {
         // Save the mapping to reuse in the after_execute step.
         $this->slidemapping = $slidesarr;
 
-        // Adjust the serialized configdata->order to the created/mapped feeds.
-        $configdata = $DB->get_field('block_instances', 'configdata', ['id' => $this->task->get_blockid()]);
-        $config = unserialize(base64_decode($configdata));
-
-        $oldorder = explode(',', $config->order);
-        $neworder = [];
-        foreach ($oldorder as $oldid) {
-            $neworder[] = $slidesarr[$oldid];
+        // If no slides are present (e.g. user has not configured the carousel), return early.
+        if (empty($slidesarr)) {
+            return;
         }
 
-        // Set csv of new slide order.
-        $config->order = implode(',', $neworder);
-        $configdata = base64_encode(serialize($config));
-
-        $DB->set_field('block_instances', 'configdata', $configdata, ['id' => $this->task->get_blockid()]);
+        // Syncs the order for the carousel block.
+        $this->update_slide_references($slidesarr);
     }
 
     /**
@@ -131,5 +123,38 @@ class restore_carousel_block_structure_step extends restore_structure_step {
         }
 
         $files->close();
+    }
+
+    /**
+     * Adjust the serialized configdata->order to the created/mapped feeds.
+     *
+     * @param array $slidesarr
+     */
+    private function update_slide_references(array $slidesarr) {
+        global $DB;
+
+        $configdata = $DB->get_field('block_instances', 'configdata', ['id' => $this->task->get_blockid()]);
+        $config = unserialize(base64_decode($configdata));
+        if ($config === false) {
+            return;
+        }
+
+        // If there are no slides or the order is not defined, there is nothing to update, return early.
+        if (empty($slidesarr) || !isset($config->order)) {
+            return;
+        }
+
+        // Update the slide references to the new slides (preserving original order).
+        $oldorder = explode(',', $config->order);
+        $neworder = [];
+        foreach ($oldorder as $oldid) {
+            $neworder[] = $slidesarr[$oldid];
+        }
+
+        // Set csv of new slide order.
+        $config->order = implode(',', $neworder);
+        $configdata = base64_encode(serialize($config));
+
+        $DB->set_field('block_instances', 'configdata', $configdata, ['id' => $this->task->get_blockid()]);
     }
 }
