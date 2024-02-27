@@ -52,7 +52,8 @@ define(['jquery', 'core/modal_factory', 'core/ajax', 'block_carousel/slick'], fu
                 adaptiveHeight: true,
                 autoplay: autoplay,
                 autoplaySpeed: playspeed,
-                responsive: breakpoints
+                responsive: breakpoints,
+                rtl: document.body.classList.contains('dir-rtl')
             });
 
             // This is a special case for when carousel is embedded in another block.
