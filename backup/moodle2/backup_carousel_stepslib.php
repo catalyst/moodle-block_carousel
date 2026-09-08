@@ -27,7 +27,6 @@
  * Define the complete carousel structure for backup, with file and id annotations.
  */
 class backup_carousel_block_structure_step extends backup_block_structure_step {
-
     /**
      * Define the structure to be processed by this backup step.
      *
@@ -46,7 +45,7 @@ class backup_carousel_block_structure_step extends backup_block_structure_step {
         if (!empty($config->order)) {
             $slideids = explode(',', $config->order);
             // Get the IN corresponding query.
-            list($insql, $inparams) = $DB->get_in_or_equal($slideids);
+            [$insql, $inparams] = $DB->get_in_or_equal($slideids);
             // Define all the in_params as sqlparams.
             foreach ($inparams as $key => $value) {
                 $inparams[$key] = backup_helper::is_sqlparam($value);
@@ -60,7 +59,7 @@ class backup_carousel_block_structure_step extends backup_block_structure_step {
 
         $slide = new backup_nested_element('slide', ['id'], [
             'blockid', 'title', 'text', 'url', 'contenttype', 'interactions', 'modalcontent', 'newtab',
-            'disabled', 'timedstart', 'timedend', 'courseid', 'notitle', 'notext'
+            'disabled', 'timedstart', 'timedend', 'courseid', 'notitle', 'notext',
         ]);
 
         // Build the tree.

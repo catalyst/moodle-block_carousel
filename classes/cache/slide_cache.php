@@ -158,7 +158,6 @@ class slide_cache implements \cache_data_source {
                 // Default to 720p resolution. Most wide standard.
                 $data['heightres'] = 720;
                 $data['widthres'] = 1280;
-
             } else {
                 $command = $pathtoffprobe . ' -of json -v error -show_format -show_streams ' .  escapeshellarg($path);
                 $json = shell_exec($command);
@@ -188,7 +187,7 @@ class slide_cache implements \cache_data_source {
      */
     public function load_many_for_cache(array $keys) {
         // Return array of all data items.
-        $data = array();
+        $data = [];
         foreach ($keys as $key) {
             $data[$key] = $this->load_for_cache($key);
         }

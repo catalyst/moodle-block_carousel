@@ -20,6 +20,7 @@
  * @package     block_carousel
  * @author      Peter Burnett <peterburnett@catalyst-au.net>
  * @copyright   Catalyst IT Australia
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class block_carousel_upgrade_helper {
     /**

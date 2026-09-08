@@ -35,7 +35,7 @@
  * @return bool
  * @todo MDL-36050 improve capability check on stick blocks, so we can check user capability before sending images.
  */
-function block_carousel_pluginfile($course, $birecordorcm, $context, $filearea, $args, $forcedownload, array $options=array()) {
+function block_carousel_pluginfile($course, $birecordorcm, $context, $filearea, $args, $forcedownload, array $options = []) {
     global $DB, $CFG, $USER;
 
     if ($context->contextlevel != CONTEXT_BLOCK) {
@@ -52,7 +52,7 @@ function block_carousel_pluginfile($course, $birecordorcm, $context, $filearea, 
         $parentcontext = $context->get_parent_context();
         if ($parentcontext->contextlevel === CONTEXT_COURSECAT) {
             // Check if category is visible and user can view this category.
-            $category = $DB->get_record('course_categories', array('id' => $parentcontext->instanceid), '*', MUST_EXIST);
+            $category = $DB->get_record('course_categories', ['id' => $parentcontext->instanceid], '*', MUST_EXIST);
             if (!$category->visible) {
                 require_capability('moodle/category:viewhiddencategories', $parentcontext);
             }
@@ -90,10 +90,10 @@ function block_carousel_pluginfile($course, $birecordorcm, $context, $filearea, 
 function block_carousel_file_options() {
     global $CFG;
 
-    return array(
+    return [
         'accepted_types' => ['web_image', 'web_video'],
         'maxfiles' => 1,
         'maxbytes' => $CFG->maxbytes,
-        'subdirs' => 0
-    );
+        'subdirs' => 0,
+    ];
 }

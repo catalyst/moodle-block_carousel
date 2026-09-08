@@ -22,7 +22,6 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class block_carousel extends block_base {
-
     /**
      * Init
      */
@@ -34,7 +33,7 @@ class block_carousel extends block_base {
      * Can appear on any page
      */
     public function applicable_formats() {
-        return array('all' => true);
+        return ['all' => true];
     }
 
     /**
@@ -63,11 +62,11 @@ class block_carousel extends block_base {
         if ($this->page->user_is_editing()) {
             return parent::html_attributes();
         }
-        $attributes = array(
+        $attributes = [
             'id' => 'inst' . $this->instance->id,
             'class' => 'block_' . $this->name(),
-            'role' => $this->get_aria_role()
-        );
+            'role' => $this->get_aria_role(),
+        ];
         return $attributes;
     }
 
@@ -89,14 +88,14 @@ class block_carousel extends block_base {
         require_once($CFG->libdir . '/filelib.php');
 
         $blockid = $this->context->id;
-        $html = html_writer::start_tag('div', array('id' => 'carousel' . $blockid));
+        $html = html_writer::start_tag('div', ['id' => 'carousel' . $blockid]);
 
         if ($this->content !== null) {
             return $this->content;
         }
 
         $config = $this->config;
-        $this->content = new stdClass;
+        $this->content = new stdClass();
 
         if (empty($config) || empty($config->order)) {
             $this->content->text = '';
@@ -114,13 +113,15 @@ class block_carousel extends block_base {
 
         // If its a multislide, we need to pick a consistent ratio.
         // Lets just pick the first slide.
+        $ratio = 1;
         if ($slides > 1) {
             $firstslide = reset($data);
-            $height = $firstslide['heightres'];
-            if (empty($height)) {
-                $ratio = 1;
-            } else {
-                $ratio = ($firstslide['widthres'] / $firstslide['heightres']);
+            if (!empty($firstslide)) {
+                $firstslide = (object) $firstslide;
+                // Ensure neither is null/falsey/zero - to avoid divide by zero error.
+                if (!empty($firstslide->heightres) && !empty($firstslide->widthres)) {
+                    $ratio = ($firstslide->widthres / $firstslide->heightres);
+                }
             }
         }
 
@@ -136,7 +137,7 @@ class block_carousel extends block_base {
               FROM {cohort} c
               JOIN {cohort_members} cm ON c.id = cm.cohortid
              WHERE cm.userid = ?';
-            $cohorts = array_keys($DB->get_records_sql($sql, array($USER->id)));
+            $cohorts = array_keys($DB->get_records_sql($sql, [$USER->id]));
         }
 
         $numslides = count($order);
@@ -150,7 +151,7 @@ class block_carousel extends block_base {
             }
 
             // Filter any files that are not present or broken.
-            if (is_null($data->heightres) && is_null($data->widthres) && $data->contenttype === 'image') {
+            if (empty($data->heightres) && empty($data->widthres) && $data->contenttype === 'image') {
                 continue;
             }
 
@@ -160,8 +161,10 @@ class block_carousel extends block_base {
             }
 
             // Check release timing.
-            if ((!empty($data->timedstart) && time() < $data->timedstart) ||
-                (!empty($data->timedend) && time() > $data->timedend)) {
+            if (
+                (!empty($data->timedstart) && time() < $data->timedstart) ||
+                (!empty($data->timedend) && time() > $data->timedend)
+            ) {
                 continue;
             }
 
@@ -180,11 +183,18 @@ class block_carousel extends block_base {
 
                 // If not a multislide, find the ratio of this one slide.
                 if ($slides <= 1) {
-                    if ($data->heightres === 0) {
+                    // Note, use empty() not === 0,
+                    // just in case there is a null or other falsey value
+                    // we never want to divide by zero!
+                    if (empty($data->heightres) || empty($data->widthres)) {
                         $ratio = 1;
                     } else {
                         $ratio = ($data->widthres / $data->heightres);
                     }
+                }
+
+                if (empty($ratio)) {
+                    $ratio = 1;
                 }
 
                 $paddingbottom = (round((1 / $ratio), 4) * 100) . '%';
@@ -196,7 +206,7 @@ class block_carousel extends block_base {
             if ($modalcontent || $url) {
                 $attr = [
                     'class' => 'slidelink',
-                    'id' => 'id_slide' . $slideid
+                    'id' => 'id_slide' . $slideid,
                 ];
                 if ($modalcontent) {
                     $this->page->requires->js_call_amd('block_carousel/carousel', 'modal', [$slideid, $title]);
@@ -217,17 +227,17 @@ class block_carousel extends block_base {
             $show = ($numslides == 0) ? 'block' : 'none';
 
             if (!empty($width)) {
-                $html .= html_writer::start_tag('div', array('style' => "max-width: {$width}; margin: auto;"));
+                $html .= html_writer::start_tag('div', ['style' => "max-width: {$width}; margin: auto;"]);
             }
 
             $style = "padding-bottom: $paddingbottom; display: $show;";
             if ($contenttype === 'image') {
                 $style .= " background-image: url($data->link);";
             }
-            $html .= html_writer::start_tag('div', array(
+            $html .= html_writer::start_tag('div', [
                 'class' => 'slidewrap',
                 'style' => $style,
-            ));
+            ]);
             if ($contenttype === 'video') {
                 // Setup the video tag.
                 $html .= html_writer::start_tag('video', [
@@ -247,12 +257,12 @@ class block_carousel extends block_base {
             if ($title) {
                 $class = 'title';
                 $class = $slides > 1 ? $class . ' multislide' : $class;
-                $html .= html_writer::tag('h4', $title, array('class' => $class));
+                $html .= html_writer::tag('h4', $title, ['class' => $class]);
             }
             if ($text) {
                 $class = 'text';
                 $class = $slides > 1 ? $class . ' multislide' : $class;
-                $html .= html_writer::tag('div', $text, array('class' => $class));
+                $html .= html_writer::tag('div', $text, ['class' => $class]);
             }
             $html .= html_writer::end_tag('div');
             if (!empty($width)) {
@@ -271,7 +281,7 @@ class block_carousel extends block_base {
             $blockid,
             $slides,
             (bool) $autoplay,
-            $playspeed * 1000
+            $playspeed * 1000,
         ]);
 
         $html .= html_writer::end_tag('div');

@@ -34,7 +34,6 @@ require_once($CFG->dirroot . '/blocks/carousel/backup/moodle2/restore_carousel_s
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class restore_carousel_block_task extends restore_block_task {
-
     /**
      * Define (add) particular settings that each block can have
      */
