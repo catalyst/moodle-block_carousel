@@ -114,13 +114,15 @@ class block_carousel extends block_base {
 
         // If its a multislide, we need to pick a consistent ratio.
         // Lets just pick the first slide.
+        $ratio = 1;
         if ($slides > 1) {
             $firstslide = reset($data);
-            $height = $firstslide['heightres'];
-            if (empty($height)) {
-                $ratio = 1;
-            } else {
-                $ratio = ($firstslide['widthres'] / $firstslide['heightres']);
+            if (!empty($firstslide)) {
+                $firstslide = (object) $firstslide;
+                // Ensure neither is null/falsey/zero - to avoid divide by zero error.
+                if (!empty($firstslide->heightres) && !empty($firstslide->widthres)) {
+                    $ratio = ($firstslide->widthres / $firstslide->heightres);
+                }
             }
         }
 
@@ -180,11 +182,18 @@ class block_carousel extends block_base {
 
                 // If not a multislide, find the ratio of this one slide.
                 if ($slides <= 1) {
-                    if ($data->heightres === 0) {
+                    // Note, use empty() not === 0,
+                    // just in case there is a null or other falsey value
+                    // we never want to divide by zero!
+                    if (empty($data->heightres) || empty($data->widthres)) {
                         $ratio = 1;
                     } else {
                         $ratio = ($data->widthres / $data->heightres);
                     }
+                }
+
+                if (empty($ratio)) {
+                    $ratio = 1;
                 }
 
                 $paddingbottom = (round((1 / $ratio), 4) * 100) . '%';
