@@ -151,7 +151,7 @@ class block_carousel extends block_base {
             }
 
             // Filter any files that are not present or broken.
-            if (is_null($data->heightres) && is_null($data->widthres) && $data->contenttype === 'image') {
+            if (empty($data->heightres) && empty($data->widthres) && $data->contenttype === 'image') {
                 continue;
             }
 
