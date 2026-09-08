@@ -25,7 +25,6 @@ namespace block_carousel;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class observers {
-
     /**
      * Removes deleted cohorts from carousel slides.
      *

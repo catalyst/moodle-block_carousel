@@ -27,7 +27,6 @@
  * Define the complete carousel structure for restore
  */
 class restore_carousel_block_structure_step extends restore_structure_step {
-
     /** @var array Slide map. */
     private $slidemapping;
 
@@ -40,7 +39,7 @@ class restore_carousel_block_structure_step extends restore_structure_step {
         return [
             new restore_path_element('block', '/block', true),
             new restore_path_element('carousel', '/block/carousel'),
-            new restore_path_element('slide', '/block/carousel/slides/slide')
+            new restore_path_element('slide', '/block/carousel/slides/slide'),
         ];
     }
 
@@ -116,7 +115,7 @@ class restore_carousel_block_structure_step extends restore_structure_step {
 
                 // Update the pathname hash as the itemid has changed.
                 $file->pathnamehash = sha1("/{$file->contextid}/{$file->component}/{$file->filearea}/{$file->itemid}"
-                        .$file->filepath.$file->filename);
+                        . $file->filepath . $file->filename);
 
                 $DB->update_record('files', $file);
             }

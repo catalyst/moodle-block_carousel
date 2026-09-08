@@ -36,7 +36,6 @@ require_once("$CFG->libdir/externallib.php");
  * Defines the carsousel API.
  */
 class external extends external_api {
-
     /**
      * Defines the parameters for the webservice function.
      *
@@ -46,7 +45,7 @@ class external extends external_api {
         return new external_function_parameters([
             'blockid' => new \external_value(PARAM_INT, 'block id of the carousel instance'),
             'rowid' => new \external_value(PARAM_INT, 'row id to move'),
-            'position' => new \external_value(PARAM_INT, 'the new position in the array of the row')
+            'position' => new \external_value(PARAM_INT, 'the new position in the array of the row'),
         ]);
     }
 

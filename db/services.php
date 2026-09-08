@@ -40,5 +40,5 @@ $functions = [
         'type' => 'update',
         'ajax' => true,
         'capabilities' => [],
-    ]
+    ],
 ];

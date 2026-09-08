@@ -29,7 +29,6 @@ require_once($CFG->dirroot . '/blocks/carousel/backup/moodle2/backup_carousel_st
  * Specialised backup task for the carousel block
  */
 class backup_carousel_block_task extends backup_block_task {
-
     /**
      * Define (add) particular settings that each block can have
      */

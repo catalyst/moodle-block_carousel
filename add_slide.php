@@ -101,14 +101,17 @@ switch ($action) {
         }
 
         redirect($prevurl);
+        break;
 
     case 'disable':
         \block_carousel\local\slide_manager::disable_slide($id);
         redirect($prevurl);
+        break;
 
     case 'enable':
         \block_carousel\local\slide_manager::enable_slide($id);
         redirect($prevurl);
+        break;
 
     default:
         break;
@@ -117,9 +120,7 @@ switch ($action) {
 $form = new \block_carousel\form\add_slide($url);
 $form->set_data($data);
 if ($form->is_cancelled()) {
-
     redirect($prevurl);
-
 } else if ($fromform = $form->get_data()) {
     $record = new \stdClass();
     $record->url = $fromform->url;

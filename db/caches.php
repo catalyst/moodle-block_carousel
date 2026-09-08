@@ -24,10 +24,10 @@
  */
 defined('MOODLE_INTERNAL') || die;
 
-$definitions = array(
-    'slides' => array(
+$definitions = [
+    'slides' => [
         'mode' => cache_store::MODE_APPLICATION,
         'datasource' => '\block_carousel\cache\slide_cache',
-        'staticacceleration' => true
-    ),
-);
+        'staticacceleration' => true,
+    ],
+];

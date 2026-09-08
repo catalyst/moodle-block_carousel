@@ -38,7 +38,6 @@ function xmldb_block_carousel_upgrade($oldversion) {
 
     $dbman = $DB->get_manager();
     if ($oldversion < 2020092200) {
-
         // Define table block_carousel to be created.
         $table = new xmldb_table('block_carousel');
 
@@ -72,7 +71,6 @@ function xmldb_block_carousel_upgrade($oldversion) {
     }
 
     if ($oldversion < 2020092400) {
-
         // Define field courseid to be added to block_carousel.
         $table = new xmldb_table('block_carousel');
         $field = new xmldb_field('courseid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'timedend');
@@ -87,7 +85,6 @@ function xmldb_block_carousel_upgrade($oldversion) {
     }
 
     if ($oldversion < 2020100100) {
-
         // Define field notitle to be added to block_carousel.
         $table = new xmldb_table('block_carousel');
         $field = new xmldb_field('notitle', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'courseid');
@@ -111,7 +108,6 @@ function xmldb_block_carousel_upgrade($oldversion) {
     }
 
     if ($oldversion < 2023032800) {
-
         // Define field notitle to be added to block_carousel.
         $table = new xmldb_table('block_carousel');
         $field = new xmldb_field('cohorts', XMLDB_TYPE_CHAR, '256', null, XMLDB_NOTNULL, null, '0', 'modalcontent');
@@ -126,7 +122,6 @@ function xmldb_block_carousel_upgrade($oldversion) {
     }
 
     if ($oldversion < 2023032803) {
-
         // Reset default to empty.
         $table = new xmldb_table('block_carousel');
         $field = new xmldb_field('cohorts', XMLDB_TYPE_CHAR, '1333', null, XMLDB_NOTNULL, null, null, 'modalcontent');

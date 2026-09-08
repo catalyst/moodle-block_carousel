@@ -26,7 +26,7 @@ namespace block_carousel\form;
 
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/formslib.php');
-require_once($CFG->dirroot.'/blocks/carousel/lib.php');
+require_once($CFG->dirroot . '/blocks/carousel/lib.php');
 
 /**
  * Form for adding/editing slides.
@@ -64,19 +64,28 @@ class add_slide extends \moodleform {
         $mform->setDefault('notext', 0);
         $mform->disabledIf('text', 'notext', 'checked');
 
-        $mform->addElement('filemanager', 'content',
-                get_string('slideimage', 'block_carousel'), null, block_carousel_file_options());
+        $mform->addElement(
+            'filemanager',
+            'content',
+            get_string('slideimage', 'block_carousel'),
+            null,
+            block_carousel_file_options()
+        );
         $mform->setType('content', PARAM_FILE);
 
         // Cohort selector.
-        $options = $DB->get_records_menu('cohort', [], 'name ASC',  'id, name');
+        $options = $DB->get_records_menu('cohort', [], 'name ASC', 'id, name');
         $element = $mform->addElement('select', 'cohorts', get_string('cohorts', 'cohort'), $options);
         $element->setMultiple(true);
         $cohortstring = strtolower(get_string('cohorts', 'cohort'));
         $mform->addElement('static', 'cohorts_help', '', get_string('cohorts_help', 'block_carousel', $cohortstring));
         if (count($options) == 0) {
-            $mform->addElement('static', 'create_cohorts_help', '',
-                    get_string('create_cohorts_help', 'block_carousel', $cohortstring));
+            $mform->addElement(
+                'static',
+                'create_cohorts_help',
+                '',
+                get_string('create_cohorts_help', 'block_carousel', $cohortstring)
+            );
         }
 
         $textfieldoptions = [
@@ -85,7 +94,7 @@ class add_slide extends \moodleform {
             'maxfiles' => -1,
             'maxbytes' => 1,
             'context' => $PAGE->context,
-            'enable_filemanagement' => false
+            'enable_filemanagement' => false,
         ];
         $mform->addElement('editor', 'modal', get_string('modaltext', 'block_carousel'), null, $textfieldoptions);
         $mform->setType('modal', PARAM_RAW);

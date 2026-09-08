@@ -26,7 +26,10 @@
 defined('MOODLE_INTERNAL') || die();
 
 if ($hassiteconfig) {
-    $settings->add(new admin_setting_configexecutable('block_carousel/pathtoffprobe',
+    $settings->add(new admin_setting_configexecutable(
+        'block_carousel/pathtoffprobe',
         get_string('settings:ffprobe:pathtoffprobe', 'block_carousel'),
-        get_string('settings:ffprobe:pathtoffprobe_desc', 'block_carousel'), '/usr/bin/ffprobe'));
+        get_string('settings:ffprobe:pathtoffprobe_desc', 'block_carousel'),
+        '/usr/bin/ffprobe'
+    ));
 }

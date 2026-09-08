@@ -34,7 +34,6 @@ require_once($CFG->libdir . '/tablelib.php');
  * Slide table for block_carousel
  */
 class slide_table extends \flexible_table implements \renderable {
-
     /**
      * The current slide number.
      *
@@ -52,7 +51,7 @@ class slide_table extends \flexible_table implements \renderable {
 
         $this->set_attribute('id', 'slidetable');
         $this->set_attribute('class', 'slidetable generaltable generalbox');
-        $this->define_columns(array(
+        $this->define_columns([
                 'title',
                 'text',
                 'url',
@@ -61,8 +60,8 @@ class slide_table extends \flexible_table implements \renderable {
                 'timed',
                 'cohorts',
                 'actions',
-        ));
-        $this->define_headers(array(
+        ]);
+        $this->define_headers([
                 get_string('slidetitle', 'block_carousel'),
                 get_string('slidetext', 'block_carousel'),
                 get_string('link', 'block_carousel'),
@@ -71,8 +70,7 @@ class slide_table extends \flexible_table implements \renderable {
                 get_string('timedrelease', 'block_carousel'),
                 get_string('cohorts', 'cohort'),
                 get_string('actions'),
-            )
-        );
+            ]);
 
         $this->collapsible(false);
         $this->sortable(false);
@@ -146,29 +144,38 @@ class slide_table extends \flexible_table implements \renderable {
 
             // Setup actions.
             $icon = $OUTPUT->pix_icon('t/edit', get_string('edit'));
-            $actions = \html_writer::link(new \moodle_url('/blocks/carousel/add_slide.php',
-                ['bid' => $blockid, 'id' => $id, 'action' => 'edit']), $icon);
+            $actions = \html_writer::link(new \moodle_url(
+                '/blocks/carousel/add_slide.php',
+                ['bid' => $blockid, 'id' => $id, 'action' => 'edit']
+            ), $icon);
 
             $icon = $OUTPUT->pix_icon('t/delete', get_string('delete'));
-            $actions .= \html_writer::link(new \moodle_url('/blocks/carousel/add_slide.php',
-                ['bid' => $blockid, 'id' => $id, 'action' => 'delete']), $icon);
+            $actions .= \html_writer::link(new \moodle_url(
+                '/blocks/carousel/add_slide.php',
+                ['bid' => $blockid, 'id' => $id, 'action' => 'delete']
+            ), $icon);
 
             $icon = $OUTPUT->pix_icon('t/copy', get_string('copy'));
-            $actions .= \html_writer::link(new \moodle_url('/blocks/carousel/add_slide.php',
-                ['bid' => $blockid, 'id' => $id, 'action' => 'clone']), $icon);
+            $actions .= \html_writer::link(new \moodle_url(
+                '/blocks/carousel/add_slide.php',
+                ['bid' => $blockid, 'id' => $id, 'action' => 'clone']
+            ), $icon);
 
             $classes = 'slidetable';
 
             // Enable / Disable.
             if (!$slide->disabled) {
                 $icon = $OUTPUT->pix_icon('t/hide', get_string('disable'));
-                $actions .= \html_writer::link(new \moodle_url('/blocks/carousel/add_slide.php',
-                    ['bid' => $blockid, 'id' => $id, 'action' => 'disable']), $icon);
-
+                $actions .= \html_writer::link(new \moodle_url(
+                    '/blocks/carousel/add_slide.php',
+                    ['bid' => $blockid, 'id' => $id, 'action' => 'disable']
+                ), $icon);
             } else {
                 $icon = $OUTPUT->pix_icon('t/show', get_string('enable'));
-                $actions .= \html_writer::link(new \moodle_url('/blocks/carousel/add_slide.php',
-                    ['bid' => $blockid, 'id' => $id, 'action' => 'enable']), $icon);
+                $actions .= \html_writer::link(new \moodle_url(
+                    '/blocks/carousel/add_slide.php',
+                    ['bid' => $blockid, 'id' => $id, 'action' => 'enable']
+                ), $icon);
 
                 $classes .= ' table-secondary';
             }
@@ -180,11 +187,13 @@ class slide_table extends \flexible_table implements \renderable {
                 $templatename = 'block_carousel/drag_handle';
             }
 
-            $actions .= \html_writer::span($OUTPUT->render_from_template($templatename,
-            ['movetitle' => get_string('move')]), '', [
+            $actions .= \html_writer::span($OUTPUT->render_from_template(
+                $templatename,
+                ['movetitle' => get_string('move')]
+            ), '', [
                 'data-action' => 'move',
                 'data-rowid' => $id,
-                'data-name' => "Slide {$slidenum}"
+                'data-name' => "Slide {$slidenum}",
             ]);
 
             $data['actions'] = $actions;
@@ -240,7 +249,7 @@ class slide_table extends \flexible_table implements \renderable {
      */
     public function get_row_html($row, $classname = '') {
         static $suppresslastrow = null;
-        $rowclasses = array();
+        $rowclasses = [];
 
         if ($classname) {
             $rowclasses[] = $classname;
@@ -249,15 +258,17 @@ class slide_table extends \flexible_table implements \renderable {
         $rowid = $this->uniqueid . '_r' . $this->currentrow;
         $html = '';
 
-        $html .= \html_writer::start_tag('tr', array('class' => implode(' ', $rowclasses), 'id' => $rowid,
-            'data-name' => "Slide {$this->slideno}"));
+        $html .= \html_writer::start_tag('tr', ['class' => implode(' ', $rowclasses), 'id' => $rowid,
+            'data-name' => "Slide {$this->slideno}"]);
 
         // If we have a separator, print it.
         if ($row === null) {
             $colcount = count($this->columns);
-            $html .= \html_writer::tag('td', \html_writer::tag('div', '',
-                    array('class' => 'tabledivider')), array('colspan' => $colcount));
-
+            $html .= \html_writer::tag('td', \html_writer::tag(
+                'div',
+                '',
+                ['class' => 'tabledivider']
+            ), ['colspan' => $colcount]);
         } else {
             $colbyindex = array_flip($this->columns);
             foreach ($row as $index => $data) {

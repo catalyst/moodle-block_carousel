@@ -29,7 +29,6 @@ namespace block_carousel\local;
  * Slide manager for block_carousel
  */
 class slide_manager {
-
     /**
      * Gets the current config for a block.
      *
