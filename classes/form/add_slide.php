@@ -99,14 +99,14 @@ class add_slide extends \moodleform {
         $mform->addElement('editor', 'modal', get_string('modaltext', 'block_carousel'), null, $textfieldoptions);
         $mform->setType('modal', PARAM_RAW);
 
-        $mform->addElement('date_time_selector', 'timedstart', get_string('from'), [
+        $mform->addElement('date_time_selector', 'timedstart', get_string('from', 'block_carousel'), [
             'startyear' => 2020,
             'stopyear' => 2030,
             'optional' => true,
         ]);
         $mform->setType('timedstart', PARAM_INT);
 
-        $mform->addElement('date_time_selector', 'timedend', get_string('to'), [
+        $mform->addElement('date_time_selector', 'timedend', get_string('to', 'block_carousel'), [
             'startyear' => 2020,
             'stopyear' => 2030,
             'optional' => true,
